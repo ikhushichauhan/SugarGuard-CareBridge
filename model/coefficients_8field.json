@@ -1,0 +1,37 @@
+{
+  "intercept": -0.5262460761284706,
+  "coefficients": [
+    {
+      "feature": "GenHlth",
+      "coefficient": 0.6079606119508782
+    },
+    {
+      "feature": "Age",
+      "coefficient": 0.5099973006851145
+    },
+    {
+      "feature": "BMI",
+      "coefficient": 0.48364856474689377
+    },
+    {
+      "feature": "HighBP",
+      "coefficient": 0.3734130068325638
+    },
+    {
+      "feature": "HighChol",
+      "coefficient": 0.28942080407834386
+    },
+    {
+      "feature": "Sex",
+      "coefficient": 0.1307139984649878
+    },
+    {
+      "feature": "Smoker",
+      "coefficient": -0.014662335422844954
+    },
+    {
+      "feature": "PhysActivity",
+      "coefficient": -0.012689655068071896
+    }
+  ]
+}

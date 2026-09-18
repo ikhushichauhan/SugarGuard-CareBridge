@@ -1,0 +1,90 @@
+{
+  "intercept": -0.5627355906099015,
+  "coefficients": [
+    {
+      "feature": "GenHlth",
+      "coefficient": 0.5719877749757378
+    },
+    {
+      "feature": "BMI",
+      "coefficient": 0.46940160312825835
+    },
+    {
+      "feature": "Age",
+      "coefficient": 0.4432202897459792
+    },
+    {
+      "feature": "HighBP",
+      "coefficient": 0.35626403057020073
+    },
+    {
+      "feature": "HighChol",
+      "coefficient": 0.28127293308825824
+    },
+    {
+      "feature": "CholCheck",
+      "coefficient": 0.26079821401014047
+    },
+    {
+      "feature": "HvyAlcoholConsump",
+      "coefficient": -0.1884709248399528
+    },
+    {
+      "feature": "Sex",
+      "coefficient": 0.14260065496111776
+    },
+    {
+      "feature": "Income",
+      "coefficient": -0.09808856660295824
+    },
+    {
+      "feature": "HeartDiseaseorAttack",
+      "coefficient": 0.07081665064550523
+    },
+    {
+      "feature": "PhysHlth",
+      "coefficient": -0.0579566253317996
+    },
+    {
+      "feature": "DiffWalk",
+      "coefficient": 0.044212762414607615
+    },
+    {
+      "feature": "MentHlth",
+      "coefficient": -0.040832947892024254
+    },
+    {
+      "feature": "Stroke",
+      "coefficient": 0.032348361494146785
+    },
+    {
+      "feature": "Education",
+      "coefficient": -0.023942335600491423
+    },
+    {
+      "feature": "AnyHealthcare",
+      "coefficient": 0.020561810827408693
+    },
+    {
+      "feature": "Fruits",
+      "coefficient": -0.0118941367606115
+    },
+    {
+      "feature": "Smoker",
+      "coefficient": -0.009764351403487779
+    },
+    {
+      "feature": "PhysActivity",
+      "coefficient": -0.005913480544586544
+    },
+    {
+      "feature": "Veggies",
+      "coefficient": -0.0037141170408602174
+    },
+    {
+      "feature": "NoDocbcCost",
+      "coefficient": 4.862687689763365e-06
+    }
+  ],
+  "note": "Coefficients describe each feature's direction and relative weight in the model's prediction (standardized feature space). They are not a medical risk statement and should not be presented as 'this factor increases your risk by X%'."
+}

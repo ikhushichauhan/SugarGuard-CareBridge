@@ -1,0 +1,25 @@
+{
+  "accuracy": 0.7143043904564768,
+  "roc_auc": 0.8105827554685582,
+  "precision": 0.3182604545725705,
+  "recall": 0.7600797834449352,
+  "f1_score": 0.4486586493987049,
+  "confusion_matrix": [
+    [
+      27448,
+      11428
+    ],
+    [
+      1684,
+      5335
+    ]
+  ],
+  "confusion_matrix_labels": [
+    "No Diabetes",
+    "Diabetes/Prediabetes"
+  ],
+  "train_rows": 183579,
+  "test_rows": 45895,
+  "dropped_duplicates": 24206,
+  "test_positive_rate": 0.15293604967861424
+}
