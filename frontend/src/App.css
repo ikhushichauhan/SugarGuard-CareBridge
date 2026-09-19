@@ -1,0 +1,18 @@
+/* ═══════════════════════════════════════════════
+   SugarGuard CareBridge — Global App Styles
+   ═══════════════════════════════════════════════ */
+
+.sg-app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: #030304;
+  color: #f8fafc;
+}
+
+.sg-global-error-wrap {
+  padding: 1.5rem 1.5rem 0;
+  max-width: 820px;
+  margin: 0 auto;
+  width: 100%;
+}

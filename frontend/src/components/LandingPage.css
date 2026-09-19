@@ -1,0 +1,636 @@
+/* ═════════════════════════════════════════════════════════════════
+   SugarGuard CareBridge — Dark Editorial / Museum Landing Page
+   ═════════════════════════════════════════════════════════════════ */
+
+.sg-landing-dark {
+  background-color: #030304;
+  color: #f8fafc;
+  font-family: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  overflow-x: hidden;
+  position: relative;
+  width: 100%;
+}
+
+/* ── Thin Vertical Editorial Grid Lines ── */
+.sg-grid-lines {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 1440px;
+  height: 100%;
+  display: flex;
+  justify-content: space-between;
+  pointer-events: none;
+  z-index: 1;
+  padding: 0 1rem;
+}
+
+.sg-grid-line {
+  width: 1px;
+  height: 100%;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.05) 0%,
+    rgba(255, 255, 255, 0.02) 50%,
+    rgba(255, 255, 255, 0.05) 100%
+  );
+}
+
+.sg-section-container {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 0 1rem;
+  position: relative;
+  z-index: 2;
+}
+
+/* ── 1. HERO SECTION (Tightly Aligned Below Navbar) ── */
+.sg-hero-dark {
+  position: relative;
+  min-height: 85vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  padding: 1.25rem 1rem 2rem;
+  z-index: 2;
+  box-sizing: border-box;
+}
+
+.sg-hero-container {
+  max-width: 1440px;
+  margin: 0 auto;
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1.05fr 0.95fr;
+  gap: 2.5rem;
+  align-items: center;
+}
+
+/* Hero Left Column */
+.sg-hero-left {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  z-index: 3;
+  padding-top: 1rem;
+  animation: sgFadeSlideUp 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.sg-eyebrow {
+  display: inline-block;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.25em;
+  color: #3b82f6;
+  text-transform: uppercase;
+  margin-bottom: 1.25rem;
+  opacity: 0.9;
+}
+
+.sg-hero-title-dark {
+  font-size: clamp(3.2rem, 5vw, 5.2rem);
+  font-weight: 300;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  color: #ffffff;
+  margin: 0 0 1.5rem 0;
+  font-family: "Plus Jakarta Sans", sans-serif;
+}
+
+.sg-title-accent {
+  font-weight: 700;
+  background: linear-gradient(135deg, #ffffff 0%, #94a3b8 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.sg-hero-desc-dark {
+  font-size: 1.12rem;
+  font-weight: 400;
+  line-height: 1.7;
+  color: #94a3b8;
+  max-width: 540px;
+  margin: 0 0 2.25rem 0;
+}
+
+.sg-hero-actions-dark {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.sg-cta-btn-dark {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.85rem;
+  background: transparent;
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  padding: 1.1rem 2.25rem;
+  border-radius: 4px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 0 20px rgba(59, 130, 246, 0.05);
+}
+
+.sg-cta-btn-dark:hover {
+  background: #ffffff;
+  color: #000000;
+  border-color: #ffffff;
+  box-shadow: 0 0 30px rgba(255, 255, 255, 0.2);
+  transform: translateY(-2px);
+}
+
+.sg-cta-btn-dark.large {
+  padding: 1.25rem 2.75rem;
+  font-size: 1rem;
+}
+
+.sg-cta-arrow {
+  font-size: 1.1rem;
+  transition: transform 0.25s ease;
+}
+
+.sg-cta-btn-dark:hover .sg-cta-arrow {
+  transform: translateX(5px);
+}
+
+.sg-disclaimer-dark {
+  font-size: 0.78rem;
+  color: #64748b;
+  letter-spacing: 0.03em;
+}
+
+/* Hero Right Column — 3D Model */
+.sg-hero-right-3d {
+  position: relative;
+  width: 100%;
+  height: 680px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: sgFadeIn 1.4s ease forwards;
+  overflow: visible;
+}
+
+.sg-3d-wrapper {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  z-index: 2;
+  overflow: visible;
+}
+
+.sg-3d-loader {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  gap: 1rem;
+  color: #64748b;
+  font-size: 0.75rem;
+  letter-spacing: 0.2em;
+}
+
+.sg-loader-pulse {
+  width: 40px;
+  height: 40px;
+  border: 2px solid rgba(59, 130, 246, 0.2);
+  border-top-color: #3b82f6;
+  border-radius: 50%;
+  animation: sgSpin 1s linear infinite;
+}
+
+/* ── 2. TRUST STRIP (Dark Editorial) ── */
+.sg-trust-strip-dark {
+  padding: 4rem 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  background: rgba(5, 5, 8, 0.5);
+}
+
+.sg-trust-items-dark {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+}
+
+.sg-trust-item-dark {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.sg-trust-num {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #3b82f6;
+  letter-spacing: 0.1em;
+}
+
+.sg-trust-name {
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  color: #e2e8f0;
+  text-transform: uppercase;
+}
+
+.sg-trust-divider-dark {
+  color: #334155;
+  font-size: 0.9rem;
+}
+
+.sg-trust-tagline-dark {
+  text-align: center;
+  font-size: 0.9rem;
+  color: #64748b;
+  margin: 0;
+}
+
+/* ── 3. HOW IT WORKS (Dark Minimalist) ── */
+.sg-how-section-dark {
+  padding: 7rem 0;
+}
+
+.sg-section-header-dark {
+  text-align: center;
+  margin-bottom: 4.5rem;
+}
+
+.sg-section-pill-dark {
+  display: inline-block;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  color: #3b82f6;
+  text-transform: uppercase;
+  margin-bottom: 1rem;
+  padding: 0.3rem 0.85rem;
+  border: 1px solid rgba(59, 130, 246, 0.25);
+  border-radius: 20px;
+}
+
+.sg-section-title-dark {
+  font-size: clamp(2rem, 3.5vw, 3rem);
+  font-weight: 300;
+  letter-spacing: -0.02em;
+  color: #ffffff;
+  margin: 0 0 0.5rem 0;
+}
+
+.sg-section-sub-dark {
+  font-size: 1.05rem;
+  color: #94a3b8;
+  margin: 0;
+}
+
+.sg-how-grid-dark {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+}
+
+.sg-how-card-dark {
+  background: rgba(15, 23, 42, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 3rem 2.25rem;
+  border-radius: 4px;
+  display: flex;
+  flex-direction: column;
+  transition: all 0.3s ease;
+}
+
+.sg-how-card-dark:hover {
+  border-color: rgba(59, 130, 246, 0.4);
+  background: rgba(15, 23, 42, 0.6);
+  transform: translateY(-3px);
+}
+
+.sg-how-card-dark.highlight {
+  border-color: rgba(59, 130, 246, 0.3);
+  background: rgba(30, 41, 59, 0.3);
+}
+
+.sg-card-num-dark {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #3b82f6;
+  letter-spacing: 0.1em;
+  margin-bottom: 1.75rem;
+}
+
+.sg-card-title-dark {
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: #ffffff;
+  margin: 0 0 0.85rem 0;
+}
+
+.sg-card-desc-dark {
+  font-size: 0.95rem;
+  line-height: 1.65;
+  color: #94a3b8;
+  margin: 0;
+}
+
+/* ── 4. MAIN PRODUCT VALUE (Editorial Dark Frame) ── */
+.sg-value-section-dark {
+  padding: 7rem 0;
+  background: linear-gradient(180deg, rgba(5, 5, 8, 0.8) 0%, rgba(10, 15, 25, 0.9) 100%);
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.sg-value-content-dark {
+  max-width: 900px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.sg-value-pill-dark {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  color: #3b82f6;
+  text-transform: uppercase;
+  margin-bottom: 1.25rem;
+  display: inline-block;
+}
+
+.sg-value-title-dark {
+  font-size: clamp(2.2rem, 4vw, 3.2rem);
+  font-weight: 300;
+  line-height: 1.25;
+  color: #ffffff;
+  margin: 0 0 3.5rem 0;
+}
+
+.sg-value-grid-dark {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+  text-align: left;
+}
+
+.sg-value-item-dark {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  background: rgba(15, 23, 42, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 1.35rem 1.65rem;
+  border-radius: 4px;
+  font-size: 1rem;
+  color: #e2e8f0;
+}
+
+.sg-value-bullet {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #3b82f6;
+  letter-spacing: 0.1em;
+}
+
+/* ── 5. WHAT THIS IS / ISN'T (Editorial Dual Columns) ── */
+.sg-what-section-dark {
+  padding: 7rem 0;
+}
+
+.sg-what-grid-dark {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2.5rem;
+}
+
+.sg-what-card-dark {
+  background: rgba(15, 23, 42, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 3rem 2.5rem;
+  border-radius: 4px;
+}
+
+.sg-what-card-dark.helps {
+  border-top: 2px solid #3b82f6;
+}
+
+.sg-what-card-dark.does-not {
+  border-top: 2px solid #64748b;
+}
+
+.sg-what-header-dark {
+  margin-bottom: 2rem;
+}
+
+.sg-what-tag-dark {
+  font-size: 0.65rem;
+  font-weight: 800;
+  letter-spacing: 0.2em;
+  padding: 0.2rem 0.6rem;
+  border-radius: 2px;
+  display: inline-block;
+  margin-bottom: 0.75rem;
+}
+
+.sg-what-tag-dark.green {
+  background: rgba(59, 130, 246, 0.15);
+  color: #60a5fa;
+}
+
+.sg-what-tag-dark.red {
+  background: rgba(100, 116, 139, 0.2);
+  color: #94a3b8;
+}
+
+.sg-what-header-dark h3 {
+  font-size: 1.35rem;
+  font-weight: 600;
+  color: #ffffff;
+  margin: 0;
+}
+
+.sg-what-list-dark {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1.15rem;
+}
+
+.sg-what-list-dark li {
+  position: relative;
+  padding-left: 1.5rem;
+  font-size: 0.95rem;
+  color: #94a3b8;
+  line-height: 1.6;
+}
+
+.sg-what-list-dark li::before {
+  content: "—";
+  position: absolute;
+  left: 0;
+  color: #3b82f6;
+}
+
+/* ── 6. FINAL CTA ── */
+.sg-final-cta-section-dark {
+  padding: 8rem 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  background: radial-gradient(circle at center, rgba(30, 58, 138, 0.15) 0%, rgba(3, 3, 4, 1) 70%);
+}
+
+.sg-final-cta-box-dark {
+  text-align: center;
+  max-width: 760px;
+  margin: 0 auto;
+}
+
+.sg-final-cta-title-dark {
+  font-size: clamp(2.2rem, 4vw, 3.4rem);
+  font-weight: 300;
+  color: #ffffff;
+  margin: 0 0 1.25rem 0;
+}
+
+.sg-final-cta-sub-dark {
+  font-size: 1.1rem;
+  color: #94a3b8;
+  line-height: 1.65;
+  margin: 0 auto 2.5rem;
+}
+
+.sg-final-disclaimer-dark {
+  font-size: 0.78rem;
+  color: #64748b;
+  margin-top: 1.5rem;
+}
+
+/* ── 7. FOOTER ── */
+.sg-footer-dark {
+  padding: 4rem 0 3rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  background: #020203;
+}
+
+.sg-footer-inner-dark {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.sg-footer-brand-dark {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.sg-footer-logo-dark {
+  font-size: 1.15rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  color: #ffffff;
+}
+
+.sg-footer-tag-dark {
+  font-size: 0.88rem;
+  color: #64748b;
+  margin: 0;
+}
+
+.sg-footer-legal-dark {
+  font-size: 0.82rem;
+  color: #475569;
+  line-height: 1.6;
+  margin: 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.04);
+  padding-top: 1.5rem;
+}
+
+/* ── Keyframe Animations ── */
+@keyframes sgFadeSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes sgFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes sgSpin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ── Responsive Design ── */
+@media (max-width: 1080px) {
+  .sg-hero-container {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    text-align: center;
+  }
+
+  .sg-hero-left {
+    align-items: center;
+  }
+
+  .sg-hero-desc-dark {
+    max-width: 600px;
+  }
+
+  .sg-hero-actions-dark {
+    align-items: center;
+  }
+
+  .sg-hero-right-3d {
+    height: 520px;
+  }
+
+  .sg-how-grid-dark {
+    grid-template-columns: 1fr;
+  }
+
+  .sg-value-grid-dark {
+    grid-template-columns: 1fr;
+  }
+
+  .sg-what-grid-dark {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .sg-hero-dark {
+    padding: 2rem 0.75rem 1.5rem;
+  }
+
+  .sg-hero-right-3d {
+    height: 420px;
+  }
+}

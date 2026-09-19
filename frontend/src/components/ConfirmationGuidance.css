@@ -1,0 +1,29 @@
+.guidance-card {
+  background: #eff6ff;
+  border: 1.5px solid #93c5fd;
+  border-radius: 12px;
+  padding: 1.5rem 2rem;
+}
+
+.gc-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #1e40af;
+  margin: 0 0 0.75rem;
+}
+
+.gc-list {
+  margin: 0;
+  padding-left: 1.25rem;
+}
+
+.gc-item {
+  font-size: 0.92rem;
+  color: #333;
+  line-height: 1.65;
+  margin-bottom: 0.5rem;
+}
+
+.gc-item:last-child {
+  margin-bottom: 0;
+}

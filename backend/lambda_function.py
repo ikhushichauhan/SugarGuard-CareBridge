@@ -8,6 +8,10 @@ from reliability_gate import check
 model = joblib.load("model_8field.pkl")
 scaler = joblib.load("scaler_8field.pkl")
 
+with open("coefficients_8field.json") as f:
+    _coef_data = json.load(f)
+COEF_MAP = {c["feature"]: c["coefficient"] for c in _coef_data["coefficients"]}
+
 
 FEATURE_ORDER = [
     "Age",
@@ -19,6 +23,16 @@ FEATURE_ORDER = [
     "PhysActivity",
     "GenHlth"
 ]
+
+
+def get_top_factors(scaled_values, top_n=3):
+    contributions = []
+    for idx, name in enumerate(FEATURE_ORDER):
+        contribution = COEF_MAP[name] * scaled_values[0][idx]
+        direction = "increased" if contribution > 0 else "decreased"
+        contributions.append((abs(contribution), name, direction))
+    contributions.sort(reverse=True)
+    return [{"feature": name, "direction": direction} for _, name, direction in contributions[:top_n]]
 
 
 def predict(features):
@@ -37,10 +51,13 @@ def predict(features):
     else:
         result = "Lower screening risk"
 
+    top_factors = get_top_factors(scaled_values)
+
     return {
         "prediction": int(prediction),
         "result": result,
-        "bmi": features["BMI"]
+        "bmi": features["BMI"],
+        "top_factors": top_factors
     }
 
 

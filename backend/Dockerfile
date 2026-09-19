@@ -9,5 +9,6 @@ COPY lambda_function.py ${LAMBDA_TASK_ROOT}/
 COPY reliability_gate.py ${LAMBDA_TASK_ROOT}/
 COPY model_8field.pkl ${LAMBDA_TASK_ROOT}/
 COPY scaler_8field.pkl ${LAMBDA_TASK_ROOT}/
+COPY coefficients_8field.json ${LAMBDA_TASK_ROOT}/
 
 CMD ["lambda_function.lambda_handler"]

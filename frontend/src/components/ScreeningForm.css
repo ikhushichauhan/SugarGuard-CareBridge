@@ -1,0 +1,133 @@
+.screening-form {
+  background: #fff;
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+.sf-title {
+  font-size: 1.35rem;
+  font-weight: 700;
+  margin: 0 0 1.5rem;
+  color: #1a1a2e;
+}
+
+/* ── Row (two columns) ── */
+.sf-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+@media (max-width: 500px) {
+  .sf-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ── Field ── */
+.sf-field {
+  margin-bottom: 1.25rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.sf-field label,
+.sf-field legend {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 0.35rem;
+}
+
+.sf-field legend {
+  padding: 0;
+}
+
+.sf-yesno {
+  border: none;
+  padding: 0;
+  margin-left: 0;
+  margin-right: 0;
+}
+
+.sf-field input,
+.sf-field select {
+  padding: 0.6rem 0.75rem;
+  border: 1.5px solid #d0d5dd;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  background: #fafafa;
+  transition: border-color 0.2s;
+  color: #1a1a2e;
+}
+
+.sf-field input:focus,
+.sf-field select:focus {
+  outline: none;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+/* ── Yes / No toggles ── */
+.sf-toggle-group {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.25rem;
+}
+
+.sf-toggle {
+  flex: 1;
+  padding: 0.55rem 0;
+  border: 1.5px solid #d0d5dd;
+  border-radius: 8px;
+  background: #fafafa;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s;
+  color: #555;
+}
+
+.sf-toggle:hover {
+  border-color: #2563eb;
+}
+
+.sf-toggle.active {
+  background: #2563eb;
+  border-color: #2563eb;
+  color: #fff;
+}
+
+/* ── Validation error ── */
+.sf-error {
+  font-size: 0.8rem;
+  color: #dc2626;
+  margin-top: 0.3rem;
+}
+
+/* ── Submit ── */
+.sf-submit {
+  width: 100%;
+  padding: 0.85rem;
+  margin-top: 0.5rem;
+  background: #2563eb;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-size: 1.05rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.sf-submit:hover:not(:disabled) {
+  background: #1d4ed8;
+}
+
+.sf-submit:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}

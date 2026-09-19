@@ -1,0 +1,85 @@
+.result-card {
+  border-radius: 12px;
+  padding: 2rem;
+  text-align: center;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+}
+
+.result-card.elevated {
+  background: #fef2f2;
+  border: 1.5px solid #fca5a5;
+}
+
+.result-card.lower {
+  background: #f0fdf4;
+  border: 1.5px solid #86efac;
+}
+
+.rc-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #555;
+  margin: 0 0 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.rc-badge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  margin-bottom: 1.25rem;
+}
+
+.rc-icon {
+  font-size: 1.6rem;
+}
+
+.elevated .rc-icon {
+  color: #dc2626;
+}
+
+.lower .rc-icon {
+  color: #16a34a;
+}
+
+.rc-label {
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.elevated .rc-label {
+  color: #b91c1c;
+}
+
+.lower .rc-label {
+  color: #15803d;
+}
+
+.rc-bmi {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  font-size: 1rem;
+}
+
+.rc-bmi-label {
+  color: #555;
+  font-weight: 500;
+}
+
+.rc-bmi-value {
+  font-weight: 700;
+  color: #1a1a2e;
+  font-size: 1.15rem;
+}
+
+.rc-disclaimer {
+  font-size: 0.82rem;
+  color: #888;
+  margin: 0;
+  line-height: 1.5;
+}

@@ -1,0 +1,479 @@
+/* ═════════════════════════════════════════════════════════════════
+   SugarGuard CareBridge — Body Impact Page Styles (Editorial Dark UI)
+   ═════════════════════════════════════════════════════════════════ */
+
+.sg-impact-page {
+  background: radial-gradient(ellipse at 50% 0%, #0d1b2a 0%, #03050c 55%, #020306 100%);
+  color: #f8fafc;
+  font-family: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  overflow-x: hidden;
+  min-height: 100vh;
+}
+
+.sg-impact-container {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+/* ── 1. HERO SECTION ── */
+.sg-impact-hero {
+  padding: 4rem 0 5rem;
+  min-height: 85vh;
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.sg-hero-grid-2col {
+  display: grid;
+  grid-template-columns: 1fr 1.15fr;
+  gap: 3rem;
+  align-items: center;
+  width: 100%;
+}
+
+.sg-hero-left {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  z-index: 2;
+}
+
+.sg-impact-eyebrow {
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.25em;
+  color: #3b82f6;
+  text-transform: uppercase;
+  margin-bottom: 1.25rem;
+}
+
+.sg-impact-title {
+  font-size: clamp(3rem, 4.8vw, 5rem);
+  font-weight: 300;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  color: #ffffff;
+  margin: 0 0 1.5rem;
+}
+
+.sg-title-gradient {
+  font-weight: 700;
+  background: linear-gradient(135deg, #60a5fa 0%, #3b82f6 50%, #93c5fd 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.sg-impact-hero-desc {
+  font-size: 1.12rem;
+  line-height: 1.7;
+  color: #94a3b8;
+  max-width: 680px;
+  margin: 0 0 2.5rem;
+  font-weight: 400;
+}
+
+.sg-scroll-indicator {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  margin-top: 0.5rem;
+}
+
+.sg-scroll-line {
+  width: 2px;
+  height: 36px;
+  background: linear-gradient(180deg, #3b82f6 0%, transparent 100%);
+  border-radius: 2px;
+}
+
+.sg-scroll-text {
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  color: #64748b;
+  text-transform: uppercase;
+}
+
+.sg-hero-center-img {
+  width: 100%;
+  height: 680px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sg-hero-img {
+  max-height: 100%;
+  max-width: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 15px 40px rgba(0, 0, 0, 0.65));
+  transition: transform 0.3s ease;
+}
+
+.sg-hero-img:hover {
+  transform: scale(1.02);
+}
+
+/* ── 2. ORGAN CARDS 2x3 GRID (2 CARDS PER LINE) ── */
+.sg-impact-grid-section {
+  padding: 3rem 0 6rem;
+}
+
+.sg-cards-2col-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2.25rem;
+}
+
+.sg-impact-grid-card {
+  background: rgba(11, 18, 32, 0.72);
+  border: none;
+  border-radius: 22px;
+  padding: 2rem 2.25rem 2.25rem;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  overflow: visible;
+  box-shadow: 0 0 25px rgba(255, 255, 255, 0.12), 0 10px 40px rgba(0, 0, 0, 0.55);
+}
+
+.sg-impact-grid-card:hover {
+  box-shadow: 0 0 40px rgba(255, 255, 255, 0.25), 0 16px 48px rgba(0, 0, 0, 0.65);
+  transform: translateY(-5px);
+}
+
+.sg-card-top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.25rem;
+}
+
+.sg-card-title {
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: #ffffff;
+  margin: 0;
+  letter-spacing: -0.01em;
+}
+
+.sg-card-num {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #475569;
+  letter-spacing: 0.1em;
+}
+
+.sg-card-body-split {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 1.5rem;
+  align-items: center;
+  min-height: 270px;
+}
+
+.sg-card-info-side {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 1.25rem;
+  height: 100%;
+}
+
+.sg-card-icon-wrapper {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: rgba(59, 130, 246, 0.14);
+  border: 1px solid rgba(59, 130, 246, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #60a5fa;
+}
+
+.sg-card-icon-wrapper svg {
+  width: 22px;
+  height: 22px;
+}
+
+.sg-card-desc-text {
+  font-size: 0.96rem;
+  line-height: 1.65;
+  color: #cbd5e1;
+  margin: 0;
+  flex: 1;
+}
+
+.sg-card-learn-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 10px;
+  padding: 0.65rem 1.15rem;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: #f8fafc;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  width: fit-content;
+}
+
+.sg-card-learn-btn:hover {
+  background: #3b82f6;
+  border-color: #3b82f6;
+  color: #ffffff;
+  box-shadow: 0 0 18px rgba(59, 130, 246, 0.35);
+}
+
+.sg-card-3d-side {
+  width: 100%;
+  height: 270px;
+  position: relative;
+  overflow: visible;
+}
+
+.sg-card-canvas-holder {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.sg-card-plus-btn {
+  position: absolute;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  color: #cbd5e1;
+  font-size: 1.3rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  z-index: 5;
+}
+
+.sg-card-plus-btn:hover {
+  background: rgba(59, 130, 246, 0.25);
+  border-color: #3b82f6;
+  color: #ffffff;
+}
+
+/* ── 3. BOTTOM CTA BANNER (LARGE new.png IMAGE) ── */
+.sg-impact-bottom-section {
+  padding: 4rem 0 6rem;
+}
+
+.sg-bottom-banner-card {
+  background: rgba(11, 18, 32, 0.78);
+  border: none;
+  border-radius: 24px;
+  padding: 3.5rem 3rem;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  position: relative;
+  overflow: visible;
+  box-shadow: 0 0 35px rgba(255, 255, 255, 0.14), 0 20px 56px rgba(0, 0, 0, 0.55);
+}
+
+.sg-bottom-banner-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.3fr 0.9fr;
+  gap: 3rem;
+  align-items: center;
+}
+
+.sg-bottom-img-col {
+  height: 360px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sg-bottom-img {
+  max-height: 100%;
+  max-width: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 15px 40px rgba(0, 0, 0, 0.65));
+}
+
+.sg-bottom-copy-col {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.sg-bottom-eyebrow {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  color: #3b82f6;
+  text-transform: uppercase;
+  margin-bottom: 0.85rem;
+}
+
+.sg-bottom-title {
+  font-size: clamp(2.1rem, 3.2vw, 2.9rem);
+  font-weight: 300;
+  line-height: 1.15;
+  color: #ffffff;
+  margin: 0 0 1.15rem;
+}
+
+.sg-bottom-desc {
+  font-size: 1.05rem;
+  line-height: 1.65;
+  color: #94a3b8;
+  margin: 0 0 2rem;
+}
+
+.sg-bottom-features-col {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  border-left: 1px solid rgba(255, 255, 255, 0.08);
+  padding-left: 2.5rem;
+}
+
+.sg-feature-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #cbd5e1;
+}
+
+.sg-feature-icon-box {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: rgba(59, 130, 246, 0.14);
+  border: 1px solid rgba(59, 130, 246, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.sg-feature-icon-box svg {
+  width: 20px;
+  height: 20px;
+}
+
+/* ── 4. FOOTER ── */
+.sg-impact-footer {
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 2.25rem 0;
+  background: #020306;
+}
+
+.sg-footer-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.sg-footer-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.sg-footer-links {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+.sg-footer-links a {
+  font-size: 0.9rem;
+  color: #64748b;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.sg-footer-links a:hover {
+  color: #ffffff;
+}
+
+/* ── RESPONSIVE STYLES ── */
+@media (max-width: 1200px) {
+  .sg-hero-grid-2col {
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+  }
+  .sg-hero-center-img {
+    height: 500px;
+  }
+  .sg-bottom-banner-grid {
+    grid-template-columns: 1fr 1.2fr;
+    gap: 2rem;
+  }
+}
+
+@media (max-width: 960px) {
+  .sg-cards-2col-grid {
+    grid-template-columns: 1fr;
+    gap: 1.75rem;
+  }
+  .sg-hero-grid-2col {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+  .sg-hero-center-img {
+    height: 420px;
+  }
+  .sg-bottom-banner-grid {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+  .sg-bottom-features-col {
+    border-left: none;
+    padding-left: 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    padding-top: 1.5rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .sg-impact-container {
+    padding: 0 1rem;
+  }
+  .sg-impact-hero {
+    padding: 2.5rem 0 3.5rem;
+  }
+  .sg-card-body-split {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+  .sg-card-3d-side {
+    height: 220px;
+  }
+  .sg-bottom-banner-card {
+    padding: 2rem 1.5rem;
+  }
+  .sg-bottom-img-col {
+    height: 240px;
+  }
+  .sg-footer-content {
+    flex-direction: column;
+    gap: 1.25rem;
+    align-items: flex-start;
+  }
+}

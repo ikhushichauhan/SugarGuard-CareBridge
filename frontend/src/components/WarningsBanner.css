@@ -1,0 +1,25 @@
+.warnings-banner {
+  background: #fffbeb;
+  border: 1.5px solid #fbbf24;
+  border-radius: 12px;
+  padding: 1.25rem 1.5rem;
+}
+
+.wb-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #92400e;
+  margin: 0 0 0.5rem;
+}
+
+.wb-list {
+  margin: 0;
+  padding-left: 1.2rem;
+}
+
+.wb-list li {
+  font-size: 0.9rem;
+  color: #78350f;
+  line-height: 1.6;
+  margin-bottom: 0.25rem;
+}

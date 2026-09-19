@@ -1,0 +1,78 @@
+.factors-card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 1.5rem 2rem;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+}
+
+.fc-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #1a1a2e;
+  margin: 0 0 1rem;
+}
+
+.fc-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.fc-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  background: #f8fafc;
+}
+
+.fc-item.increased {
+  border-left: 3px solid #ef4444;
+}
+
+.fc-item.decreased {
+  border-left: 3px solid #22c55e;
+}
+
+.fc-arrow {
+  font-size: 1.2rem;
+  font-weight: 700;
+  flex-shrink: 0;
+  margin-top: 0.1rem;
+}
+
+.fc-item.increased .fc-arrow {
+  color: #ef4444;
+}
+
+.fc-item.decreased .fc-arrow {
+  color: #22c55e;
+}
+
+.fc-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.fc-name {
+  font-weight: 600;
+  color: #1a1a2e;
+  font-size: 0.95rem;
+}
+
+.fc-dir {
+  font-size: 0.8rem;
+  color: #777;
+  margin-top: 0.15rem;
+}
+
+.fc-disclaimer {
+  font-size: 0.8rem;
+  color: #999;
+  margin: 0;
+  line-height: 1.5;
+}
