@@ -74,6 +74,13 @@ export default function Navbar({ lang, onToggleLang, onNavigate, theme = "light"
           >
             {t.navImpact || "Body Impact"}
           </button>
+          <button
+            type="button"
+            className="sg-nav-link"
+            onClick={() => handleNavClick("lab-checker")}
+          >
+            {t.navLabChecker}
+          </button>
 
           {/* CTA — Start Screening */}
           <button
@@ -149,6 +156,13 @@ export default function Navbar({ lang, onToggleLang, onNavigate, theme = "light"
             onClick={() => handleNavClick("impact")}
           >
             {t.navImpact || "Body Impact"}
+          </button>
+          <button
+            type="button"
+            className="sg-mobile-nav-link"
+            onClick={() => handleNavClick("lab-checker")}
+          >
+            {t.navLabChecker}
           </button>
           <button
             type="button"

@@ -5,6 +5,7 @@ const strings = {
     navHowItWorks: "How it works",
     navAbout: "About",
     navImpact: "Body Impact",
+    navLabChecker: "Lab Checker",
     navStartScreening: "Start Screening",
     langLabel: "हिन्दी",
 
@@ -209,6 +210,58 @@ const strings = {
     exitTitle: "Screening Not Applicable",
     blockTitle: "Unable to Process",
     tryAgain: "Try Again",
+
+    /* ── Lab Report Checker Page ── */
+    labPageBadge: "Manual Lab Report Checker",
+    labPageTitle: "Check Your Lab Report",
+    labPageSub:
+      "Enter a value from your lab report to see how it compares with standard reference ranges.",
+    labTestSelectLabel: "Select Test Type",
+    labTestSelectPlaceholder: "Choose a test",
+    labTestHbA1c: "HbA1c",
+    labTestFPG: "Fasting Blood Glucose (FPG)",
+    labTestRBG: "Random Blood Glucose (RBG)",
+    labTestOGTT: "2-Hour OGTT",
+    labValueLabel: "Enter Value",
+    labValuePlaceholder: "e.g. 5.8",
+    labUnitLabel: "Unit",
+    labCheckResultBtn: "Check Result",
+    labResultIntro: "You submitted:",
+    labResultSubmittedTestLabel: "Test",
+    labResultSubmittedValueLabel: "Value",
+
+    /* Reference-range interpretation (HbA1c / FPG / OGTT) */
+    labCategoryNormalLabel: "Within the Reference Range",
+    labCategoryNormalDesc:
+      "This value falls within the typical reference range for this test.",
+    labCategoryPrediabetesLabel: "Prediabetes Range",
+    labCategoryPrediabetesDesc:
+      "This value falls within the range commonly associated with prediabetes. This is not a diagnosis.",
+    labCategoryDiabetesLabel: "Diabetes-Range Result — Clinical Confirmation Required",
+    labCategoryDiabetesDesc:
+      "This value falls within the range associated with diabetes for this test. This is not a diagnosis.",
+
+    /* Random Blood Glucose — handled separately since it isn't diagnostic on its own */
+    labRbgBelowLabel: "Below the Diagnostic Threshold",
+    labRbgBelowDesc:
+      "A random glucose value below 200 mg/dL does not, by itself, establish or rule out diabetes. Random glucose alone is generally not used to diagnose diabetes unless it is accompanied by classic symptoms.",
+    labRbgAboveLabel: "Diagnostic-Range Result — Clinical Evaluation Recommended",
+    labRbgAboveDesc:
+      "A random glucose value of 200 mg/dL or higher can be used diagnostically when accompanied by classic symptoms of high blood sugar, such as excessive thirst, frequent urination, or unexplained weight loss. This result warrants prompt evaluation by a healthcare professional.",
+
+    /* Standing safety footnotes shown with any interpreted result */
+    labConfirmationNote:
+      "An abnormal result on a single test generally needs to be confirmed by a healthcare professional through repeat testing or additional tests, unless clear symptoms of diabetes are already present.",
+    labPregnancyNote:
+      "These reference ranges are for non-pregnant adults. Pregnancy uses different diagnostic criteria for blood glucose and HbA1c.",
+    labToolDisclaimer:
+      "This tool only explains where your entered value falls relative to standard reference ranges. It does not diagnose you and does not replace professional medical advice.",
+
+    labBackBtn: "Back",
+    labHomeBtn: "Return to Home",
+    labTestRequired: "Please select a test type.",
+    labValueRequired: "Please enter a value.",
+    labValueInvalid: "Please enter a valid positive number.",
   },
 
   hi: {
@@ -217,6 +270,7 @@ const strings = {
     navHowItWorks: "यह कैसे काम करता है",
     navAbout: "हमारे बारे में",
     navImpact: "शारीरिक प्रभाव",
+    navLabChecker: "लैब चेकर",
     navStartScreening: "स्क्रीनिंग शुरू करें",
     langLabel: "English",
 
@@ -421,6 +475,58 @@ const strings = {
     exitTitle: "स्क्रीनिंग लागू नहीं",
     blockTitle: "प्रक्रिया नहीं हो सकी",
     tryAgain: "फिर प्रयास करें",
+
+    /* ── Lab Report Checker Page ── */
+    labPageBadge: "मैनुअल लैब रिपोर्ट चेकर",
+    labPageTitle: "अपनी लैब रिपोर्ट जांचें",
+    labPageSub:
+      "अपनी लैब रिपोर्ट से एक मान दर्ज करें ताकि देखा जा सके कि यह मानक संदर्भ सीमाओं की तुलना में कहाँ आता है।",
+    labTestSelectLabel: "जांच का प्रकार चुनें",
+    labTestSelectPlaceholder: "एक जांच चुनें",
+    labTestHbA1c: "एचबीए1सी (HbA1c)",
+    labTestFPG: "फास्टिंग ब्लड ग्लूकोज़ (FPG)",
+    labTestRBG: "रैंडम ब्लड ग्लूकोज़ (RBG)",
+    labTestOGTT: "2-घंटे ओजीटीटी (OGTT)",
+    labValueLabel: "मान दर्ज करें",
+    labValuePlaceholder: "जैसे 5.8",
+    labUnitLabel: "इकाई",
+    labCheckResultBtn: "परिणाम जांचें",
+    labResultIntro: "आपने यह दर्ज किया:",
+    labResultSubmittedTestLabel: "जांच",
+    labResultSubmittedValueLabel: "मान",
+
+    /* संदर्भ-सीमा व्याख्या (HbA1c / FPG / OGTT) */
+    labCategoryNormalLabel: "सामान्य संदर्भ सीमा के भीतर",
+    labCategoryNormalDesc:
+      "यह मान इस जांच के सामान्य संदर्भ सीमा के भीतर है।",
+    labCategoryPrediabetesLabel: "प्रीडायबिटीज़ सीमा",
+    labCategoryPrediabetesDesc:
+      "यह मान आमतौर पर प्रीडायबिटीज़ से जुड़ी सीमा में आता है। यह कोई निदान नहीं है।",
+    labCategoryDiabetesLabel: "डायबिटीज़-सीमा परिणाम — चिकित्सीय पुष्टि आवश्यक",
+    labCategoryDiabetesDesc:
+      "यह मान इस जांच के लिए डायबिटीज़ से जुड़ी सीमा में आता है। यह कोई निदान नहीं है।",
+
+    /* रैंडम ब्लड ग्लूकोज़ — अलग से संभाला गया क्योंकि यह अकेले निदान योग्य नहीं है */
+    labRbgBelowLabel: "नैदानिक सीमा से नीचे",
+    labRbgBelowDesc:
+      "200 mg/dL से कम रैंडम ग्लूकोज़ मान अकेले डायबिटीज़ को स्थापित या खारिज नहीं करता। रैंडम ग्लूकोज़ आमतौर पर तब तक निदान के लिए उपयोग नहीं किया जाता जब तक इसके साथ स्पष्ट लक्षण न हों।",
+    labRbgAboveLabel: "नैदानिक-सीमा परिणाम — शीघ्र चिकित्सीय मूल्यांकन की सिफारिश",
+    labRbgAboveDesc:
+      "200 mg/dL या उससे अधिक का रैंडम ग्लूकोज़ मान, उच्च रक्त शर्करा के स्पष्ट लक्षणों (जैसे अत्यधिक प्यास, बार-बार पेशाब आना, या अस्पष्टीकृत वजन घटना) के साथ होने पर निदान के लिए उपयोग किया जा सकता है। इस परिणाम के लिए किसी स्वास्थ्य पेशेवर द्वारा शीघ्र मूल्यांकन आवश्यक है।",
+
+    /* किसी भी व्याख्यायित परिणाम के साथ दिखाई जाने वाली स्थायी सुरक्षा टिप्पणियाँ */
+    labConfirmationNote:
+      "किसी एक जांच में असामान्य परिणाम को आमतौर पर किसी स्वास्थ्य पेशेवर द्वारा दोहराई गई जांच या अतिरिक्त जांचों से पुष्टि करने की आवश्यकता होती है, जब तक कि डायबिटीज़ के स्पष्ट लक्षण पहले से मौजूद न हों।",
+    labPregnancyNote:
+      "ये संदर्भ सीमाएं गैर-गर्भवती वयस्कों के लिए हैं। गर्भावस्था में रक्त शर्करा और HbA1c के लिए अलग नैदानिक मानदंड उपयोग किए जाते हैं।",
+    labToolDisclaimer:
+      "यह टूल केवल यह बताता है कि आपका दर्ज किया गया मान मानक संदर्भ सीमाओं की तुलना में कहाँ आता है। यह आपका निदान नहीं करता और पेशेवर चिकित्सीय सलाह का विकल्प नहीं है।",
+
+    labBackBtn: "वापस",
+    labHomeBtn: "होम पर जाएं",
+    labTestRequired: "कृपया जांच का प्रकार चुनें।",
+    labValueRequired: "कृपया एक मान दर्ज करें।",
+    labValueInvalid: "कृपया एक मान्य सकारात्मक संख्या दर्ज करें।",
   },
 };
 

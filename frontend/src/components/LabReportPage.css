@@ -1,0 +1,372 @@
+/* ═══════════════════════════════════════════════
+   SugarGuard CareBridge — Lab Report Checker Page
+   ═══════════════════════════════════════════════ */
+
+.sg-lc-page {
+  background: #f7f9fc;
+  min-height: 100vh;
+  padding: 3rem 0 5rem;
+  font-family: "Plus Jakarta Sans", sans-serif;
+  color: #1e293b;
+}
+
+.sg-lc-container {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.75rem;
+}
+
+/* ── Header ── */
+.sg-lc-header {
+  text-align: center;
+}
+
+.sg-lc-badge {
+  display: inline-block;
+  background: #eff6ff;
+  color: #2563eb;
+  border: 1px solid #bfdbfe;
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  padding: 0.35rem 0.9rem;
+  border-radius: 20px;
+  margin-bottom: 1rem;
+}
+
+.sg-lc-title {
+  font-size: 2rem;
+  font-weight: 800;
+  color: #0f2b48;
+  margin: 0 0 0.6rem;
+  letter-spacing: -0.01em;
+}
+
+.sg-lc-sub {
+  font-size: 0.98rem;
+  color: #64748b;
+  margin: 0 auto;
+  max-width: 520px;
+  line-height: 1.55;
+}
+
+/* ── Form Card ── */
+.sg-lc-form-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 18px;
+  padding: 2.25rem 2.5rem;
+  box-shadow: 0 4px 20px rgba(15, 43, 72, 0.05);
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.sg-lc-field {
+  display: flex;
+  flex-direction: column;
+}
+
+.sg-lc-label {
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: #334155;
+  margin-bottom: 0.6rem;
+}
+
+.sg-lc-select,
+.sg-lc-input {
+  width: 100%;
+  padding: 0.85rem 1.1rem;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 8px;
+  font-size: 0.98rem;
+  color: #0f2b48;
+  background: #f8fafc;
+  transition: all 0.2s ease;
+  box-sizing: border-box;
+  font-family: inherit;
+}
+
+.sg-lc-select option {
+  background: #ffffff;
+  color: #0f2b48;
+}
+
+.sg-lc-select:focus,
+.sg-lc-input:focus {
+  outline: none;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.15);
+  background: #ffffff;
+}
+
+.sg-lc-select.error,
+.sg-lc-input.error {
+  border-color: #ef4444;
+  background: #fef2f2;
+}
+
+.sg-lc-error {
+  font-size: 0.82rem;
+  color: #dc2626;
+  margin-top: 0.45rem;
+  font-weight: 600;
+}
+
+/* ── Value + Unit row ── */
+.sg-lc-row {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 1.25rem;
+}
+
+.sg-lc-unit-display {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  min-height: 50px;
+  padding: 0.85rem 1.1rem;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 8px;
+  background: #f1f5f9;
+  color: #475569;
+  font-weight: 700;
+  font-size: 0.98rem;
+  box-sizing: border-box;
+}
+
+/* ── Submit Button ── */
+.sg-lc-submit-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #2563eb;
+  color: #ffffff;
+  border: none;
+  padding: 1rem 2rem;
+  border-radius: 10px;
+  font-size: 1.02rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.15s ease;
+}
+
+.sg-lc-submit-btn:hover {
+  background: #1d4ed8;
+  transform: translateY(-1px);
+}
+
+/* ── Interpreted Result Card ──
+   Tone classes drive the left accent + badge colors. "normal" = green,
+   "warning" = amber (prediabetes range), "alert" = red (diabetes-range /
+   RBG diagnostic flag), "info" = neutral blue (RBG below threshold —
+   deliberately not colored as "good" or "bad", since it's inconclusive). */
+.sg-lc-result-card {
+  background: #ffffff;
+  border: 1.5px solid #e2e8f0;
+  border-left-width: 5px;
+  border-radius: 18px;
+  padding: 2rem 2.25rem;
+  box-shadow: 0 4px 20px rgba(15, 43, 72, 0.05);
+}
+
+.sg-lc-result-card.tone-normal {
+  border-left-color: #16a34a;
+}
+
+.sg-lc-result-card.tone-warning {
+  border-left-color: #f59e0b;
+}
+
+.sg-lc-result-card.tone-alert {
+  border-left-color: #dc2626;
+}
+
+.sg-lc-result-card.tone-info {
+  border-left-color: #2563eb;
+}
+
+.sg-lc-result-badge {
+  display: inline-block;
+  font-size: 0.85rem;
+  font-weight: 700;
+  padding: 0.4rem 0.95rem;
+  border-radius: 20px;
+  margin-bottom: 1.1rem;
+  line-height: 1.4;
+}
+
+.tone-normal .sg-lc-result-badge {
+  background: #dcfce7;
+  color: #15803d;
+}
+
+.tone-warning .sg-lc-result-badge {
+  background: #fffbeb;
+  color: #b45309;
+}
+
+.tone-alert .sg-lc-result-badge {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+.tone-info .sg-lc-result-badge {
+  background: #eff6ff;
+  color: #1e40af;
+}
+
+.sg-lc-result-intro {
+  font-size: 0.92rem;
+  color: #475569;
+  font-weight: 600;
+  margin: 0 0 0.85rem;
+}
+
+.sg-lc-result-summary {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  margin-bottom: 1.25rem;
+}
+
+.sg-lc-result-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 0.75rem 1.1rem;
+}
+
+.sg-lc-result-key {
+  font-size: 0.88rem;
+  color: #64748b;
+  font-weight: 600;
+}
+
+.sg-lc-result-val {
+  font-size: 0.98rem;
+  color: #0f2b48;
+  font-weight: 700;
+}
+
+.sg-lc-result-desc {
+  font-size: 0.95rem;
+  color: #334155;
+  line-height: 1.6;
+  margin: 0 0 1rem;
+}
+
+.sg-lc-result-confirm {
+  font-size: 0.9rem;
+  color: #334155;
+  line-height: 1.6;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 0.9rem 1.1rem;
+  margin: 0 0 1.25rem;
+}
+
+.sg-lc-result-footnotes {
+  border-top: 1px solid #eef2f6;
+  padding-top: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.sg-lc-result-footnote {
+  font-size: 0.8rem;
+  color: #94a3b8;
+  line-height: 1.55;
+  margin: 0;
+}
+
+/* ── Navigation Actions ── */
+.sg-lc-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.sg-lc-back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: none;
+  border: none;
+  color: #475569;
+  font-size: 0.92rem;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0.6rem 1rem;
+  border-radius: 8px;
+  transition: all 0.15s ease;
+}
+
+.sg-lc-back-btn:hover {
+  background: #e2e8f0;
+  color: #0f2b48;
+}
+
+.sg-lc-back-arrow {
+  font-size: 1rem;
+}
+
+.sg-lc-home-btn {
+  background: #ffffff;
+  border: 1.5px solid #cbd5e1;
+  color: #334155;
+  font-size: 0.92rem;
+  font-weight: 700;
+  cursor: pointer;
+  padding: 0.65rem 1.4rem;
+  border-radius: 8px;
+  transition: all 0.15s ease;
+}
+
+.sg-lc-home-btn:hover {
+  border-color: #2563eb;
+  color: #1d4ed8;
+  background: #eff6ff;
+}
+
+/* ── Responsive ── */
+@media (max-width: 600px) {
+  .sg-lc-container {
+    padding: 0 1rem;
+  }
+
+  .sg-lc-form-card {
+    padding: 1.5rem 1.25rem;
+    border-radius: 12px;
+  }
+
+  .sg-lc-result-card {
+    padding: 1.5rem 1.25rem;
+  }
+
+  .sg-lc-row {
+    grid-template-columns: 1fr;
+  }
+
+  .sg-lc-actions {
+    flex-direction: column-reverse;
+    align-items: stretch;
+    text-align: center;
+  }
+
+  .sg-lc-back-btn {
+    justify-content: center;
+  }
+}

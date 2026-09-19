@@ -9,13 +9,14 @@ import ProcessingView from "./components/ProcessingView";
 import ResultPage from "./components/ResultPage";
 import CareJourneyPage from "./components/CareJourneyPage";
 import DiabetesImpactPage from "./components/DiabetesImpactPage";
+import LabReportPage from "./components/LabReportPage";
 import ErrorBanner from "./components/ErrorBanner";
 
 import "./App.css";
 
 export default function App() {
   const [lang, setLang] = useState("en");
-  // Views: "landing" | "screening" | "impact" | "processing" | "result" | "journey"
+  // Views: "landing" | "screening" | "impact" | "processing" | "result" | "journey" | "labChecker"
   const [currentView, setCurrentView] = useState("landing");
   const [loading, setLoading] = useState(false);
   const [response, setResponse] = useState(null); // { status, result, warnings }
@@ -53,6 +54,12 @@ export default function App() {
     }
     if (sectionId === "impact") {
       setCurrentView("impact");
+      return;
+    }
+
+    if (sectionId === "lab-checker") {
+      setError(null);
+      setCurrentView("labChecker");
       return;
     }
 
@@ -196,6 +203,13 @@ export default function App() {
           result={response.result}
           lang={lang}
           onBackToResult={handleBackToResult}
+          onBackToHome={handleBackToLanding}
+        />
+      )}
+
+      {currentView === "labChecker" && (
+        <LabReportPage
+          lang={lang}
           onBackToHome={handleBackToLanding}
         />
       )}
