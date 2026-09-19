@@ -1,0 +1,6 @@
+SugarGuard-CareBridge/
+├── .gitignore   ← YE
+├── README.md
+├── backend/
+├── frontend/
+└── model/
