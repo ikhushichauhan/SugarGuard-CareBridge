@@ -11,7 +11,7 @@ export default function ResultCard({ result, lang }) {
 
       <div className="rc-badge">
         <span className="rc-icon" aria-hidden="true">
-          {isElevated ? "⚠" : "✓"}
+          {isElevated ? "!" : "✓"}
         </span>
         <span className="rc-label">
           {isElevated ? t.elevated : t.lower}

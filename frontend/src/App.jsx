@@ -92,8 +92,8 @@ export default function App() {
       }
 
       if (data.status === "EXIT") {
-        setError({ title: t.exitTitle, message: data.message || t.serverError });
-        setCurrentView("screening");
+        setResponse(data);
+        setCurrentView("result");
         return;
       }
 
@@ -130,7 +130,7 @@ export default function App() {
     setCurrentView("screening");
   };
 
-  const isDarkNav = currentView === "landing" || currentView === "screening" || currentView === "impact";
+  const isDarkNav = currentView === "landing" || currentView === "impact";
 
   return (
     <div className="sg-app">

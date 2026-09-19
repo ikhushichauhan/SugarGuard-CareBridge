@@ -331,7 +331,6 @@ export default function ScreeningPage({ lang, onSubmit, loading }) {
 
                 {form.already_diagnosed === true && (
                   <div className="sg-callout-warning">
-                    <span className="sg-warning-icon">ⓘ</span>
                     <p>{t.alreadyDiagnosedWarning}</p>
                   </div>
                 )}

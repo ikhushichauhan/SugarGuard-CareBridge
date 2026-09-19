@@ -38,11 +38,11 @@ export default function CareJourneyPage({ result, lang, onBackToResult, onBackTo
           <p className="sg-gc-body">{t.guidanceCardBody}</p>
         </div>
 
-        {/* ── 2. Confirmation Passport ⭐ (Printable Summary) ── */}
+        {/* ── 2. Confirmation Passport (Printable Summary) ── */}
         <div className="sg-passport-section" id="confirmation-passport">
           <div className="sg-passport-head no-print">
             <div>
-              <h3 className="sg-pass-heading">📄 {t.passportHeading}</h3>
+              <h3 className="sg-pass-heading">{t.passportHeading}</h3>
               <p className="sg-pass-sub">{t.passportSub}</p>
             </div>
             <button
@@ -50,7 +50,6 @@ export default function CareJourneyPage({ result, lang, onBackToResult, onBackTo
               className="sg-download-btn"
               onClick={handlePrint}
             >
-              <span className="sg-dl-icon">🖨️</span>
               <span>{t.downloadPassportBtn}</span>
             </button>
           </div>
@@ -62,7 +61,7 @@ export default function CareJourneyPage({ result, lang, onBackToResult, onBackTo
             {/* Passport Header */}
             <div className="sg-pp-header">
               <div className="sg-pp-brand">
-                <span className="sg-pp-logo">🛡 SugarGuard CareBridge</span>
+                <span className="sg-pp-logo">SugarGuard CareBridge</span>
                 <span className="sg-pp-tag">Screening-to-Confirmation Summary</span>
               </div>
               <div className="sg-pp-meta">
@@ -173,7 +172,6 @@ export default function CareJourneyPage({ result, lang, onBackToResult, onBackTo
         {/* ── 4. What to Discuss Before Your Visit ── */}
         <div className="sg-discuss-card no-print">
           <div className="sg-dc-header">
-            <span className="sg-dc-icon">🩺</span>
             <div>
               <h3 className="sg-dc-title">{t.whatToDiscussTitle}</h3>
               <p className="sg-dc-sub">{t.whatToDiscussSub}</p>
@@ -222,7 +220,7 @@ export default function CareJourneyPage({ result, lang, onBackToResult, onBackTo
               className="sg-secondary-btn"
               onClick={onBackToHome}
             >
-              🏠 Return to Home
+              Return to Home
             </button>
           </div>
         </div>

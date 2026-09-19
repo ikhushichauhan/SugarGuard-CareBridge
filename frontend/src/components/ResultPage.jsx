@@ -3,6 +3,30 @@ import "./ResultPage.css";
 
 export default function ResultPage({ result, warnings, lang, onContinueToJourney, onNewScreening }) {
   const t = strings[lang];
+
+  if (result?.status === "EXIT") {
+    return (
+      <div className="sg-result-page">
+        <div className="sg-res-container">
+          <div className="sg-main-result-card" style={{ background: "#ffffff", borderColor: "#cbd5e1" }}>
+            <div className="sg-mrc-badge-pill" style={{ background: "#e0f2fe", color: "#0369a1" }}>
+              <span>{t.exitTitle || "Already Diagnosed"}</span>
+            </div>
+            <h2 className="sg-mrc-headline" style={{ color: "#0f2b48" }}>{t.exitTitle || "Already Diagnosed"}</h2>
+            <p className="sg-mrc-disclaimer" style={{ fontSize: "1rem", color: "#334155", margin: "1.5rem 0", lineHeight: "1.6" }}>
+              {result.message || t.alreadyDiagnosedWarning}
+            </p>
+            <div className="sg-res-actions">
+              <button type="button" className="sg-hero-cta-btn large" onClick={onNewScreening}>
+                <span>{t.startNewScreening}</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   const isElevated = result?.prediction === 1;
   const bmi = result?.bmi || "--";
   const factors = result?.top_factors || [];
@@ -23,7 +47,7 @@ export default function ResultPage({ result, warnings, lang, onContinueToJourney
         {warnings && warnings.length > 0 && (
           <div className="sg-res-warning-banner" role="alert">
             <div className="sg-wb-head">
-              <span className="sg-wb-icon">⚠</span>
+              <span className="sg-wb-icon"></span>
               <strong>{t.warningsTitle}</strong>
             </div>
             <ul className="sg-wb-list">
@@ -86,7 +110,7 @@ export default function ResultPage({ result, warnings, lang, onContinueToJourney
 
         {/* ── What to do next Card ── */}
         <div className="sg-next-card">
-          <div className="sg-next-icon">💡</div>
+          <div className="sg-next-icon"></div>
           <div className="sg-next-text">
             <h4>{t.whatToDoTitle}</h4>
             <p>{t.whatToDoDesc}</p>

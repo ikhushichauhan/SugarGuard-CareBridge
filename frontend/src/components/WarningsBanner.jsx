@@ -8,7 +8,7 @@ export default function WarningsBanner({ warnings, lang }) {
 
   return (
     <div className="warnings-banner" role="alert">
-      <h3 className="wb-title">⚠ {t.warningsTitle}</h3>
+      <h3 className="wb-title">{t.warningsTitle}</h3>
       <ul className="wb-list">
         {warnings.map((w, idx) => (
           <li key={idx}>{w}</li>
