@@ -24,6 +24,12 @@ FEATURE_ORDER = [
     "GenHlth"
 ]
 
+CORS_HEADERS = {
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Headers": "Content-Type",
+    "Access-Control-Allow-Methods": "POST, OPTIONS"
+}
+
 
 def get_top_factors(scaled_values, top_n=3):
     contributions = []
@@ -61,7 +67,25 @@ def predict(features):
     }
 
 
+def _get_http_method(event):
+    # Covers both REST API (v1) and HTTP API (v2) event shapes, plus
+    # a plain local test event that sets "httpMethod" directly.
+    if not isinstance(event, dict):
+        return None
+    if "httpMethod" in event:
+        return event["httpMethod"]
+    return event.get("requestContext", {}).get("http", {}).get("method")
+
+
 def lambda_handler(event, context):
+
+    # Handle CORS preflight request
+    if _get_http_method(event) == "OPTIONS":
+        return {
+            "statusCode": 200,
+            "headers": CORS_HEADERS,
+            "body": ""
+        }
 
     # Local testing
     if isinstance(event, dict) and "body" in event:
@@ -79,12 +103,14 @@ def lambda_handler(event, context):
     if gate_result["status"] == "BLOCK":
         return {
             "statusCode": 400,
+            "headers": CORS_HEADERS,
             "body": json.dumps(gate_result)
         }
 
     if gate_result["status"] == "EXIT":
         return {
             "statusCode": 200,
+            "headers": CORS_HEADERS,
             "body": json.dumps(gate_result)
         }
 
@@ -98,5 +124,6 @@ def lambda_handler(event, context):
 
     return {
         "statusCode": 200,
+        "headers": CORS_HEADERS,
         "body": json.dumps(response)
     }

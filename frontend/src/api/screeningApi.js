@@ -1,70 +1,69 @@
-const API_URL =
-  import.meta.env.VITE_SCREENING_API_URL ||
-  "REPLACE_WITH_API_GATEWAY_URL";
+// Single point of contact with the backend. Keep field names EXACTLY
+// matching what reliability_gate.py / lambda_function.py expect and return.
+//
+// Confirmed live response shapes (verified against real lambda_function.py):
+//   PASS:  { status: "PASS",  result: { prediction, result, bmi, top_factors }, warnings: [] }
+//   BLOCK: { status: "BLOCK", reason, missing, message }
+//   EXIT:  { status: "EXIT",  message }
+//
+// Local dev (`npm run dev`): the browser cannot call the raw Lambda RIE URL
+// directly - RIE doesn't handle real HTTP OPTIONS preflights, and doesn't
+// translate the Lambda's {statusCode, headers, body} return value into a
+// real HTTP response (only API Gateway does that). So in dev we POST to
+// `/api/screening`, which vite.config.js proxies to the Docker RIE
+// same-origin (no CORS preflight at all), using the exact event shape RIE
+// expects: { body: "<json string>" }. RIE's response is then unwrapped here.
+//
+// Production (real deployed API Gateway + Lambda proxy integration) needs
+// none of this: the real HTTP status + real headers + plain JSON body are
+// already correct, so it's a plain fetch/parse against the real API URL.
 
-/**
- * Send screening data to the backend Lambda.
- *
- * The Docker Lambda endpoint (localhost:9000) expects a raw JSON body
- * and returns { statusCode, body } where body is a JSON string.
- *
- * API Gateway will return the body directly as parsed JSON.
- *
- * @param {Object} formData - The screening form values.
- * @param {string} lang - "en" or "hi".
- * @returns {Promise<Object>} Parsed response from the backend.
- */
-export async function submitScreening(formData, lang = "en") {
-  const payload = {
-    age: Number(formData.age),
-    sex: formData.sex,
-    height_cm: Number(formData.height_cm),
-    weight_kg: Number(formData.weight_kg),
-    high_bp: formData.high_bp,
-    high_chol: formData.high_chol,
-    smoker: formData.smoker,
-    phys_activity: formData.phys_activity,
-    gen_health: Number(formData.gen_health),
-    already_diagnosed: formData.already_diagnosed,
-    lang,
+const DEV_PROXY_PATH = "/api/screening";
+
+function buildPayload(formValues) {
+  return {
+    age: Number(formValues.age),
+    sex: formValues.sex,                       // "male" | "female"
+    height_cm: Number(formValues.height_cm),
+    weight_kg: Number(formValues.weight_kg),
+    high_bp: formValues.high_bp,               // boolean
+    high_chol: formValues.high_chol,           // boolean
+    smoker: formValues.smoker,                 // boolean
+    phys_activity: formValues.phys_activity,   // boolean
+    gen_health: Number(formValues.gen_health), // 1-5
+    already_diagnosed: formValues.already_diagnosed, // boolean
   };
+}
 
-  const isLocalLambda = API_URL.includes("localhost") || API_URL.includes("127.0.0.1");
+export async function submitScreening(formValues) {
+  const payload = buildPayload(formValues);
 
-  const response = await fetch(API_URL, {
+  if (import.meta.env.DEV) {
+    // --- Local dev: via Vite proxy -> Docker Lambda RIE ---
+    const response = await fetch(DEV_PROXY_PATH, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ body: JSON.stringify(payload) }),
+    });
+
+    // RIE always answers with real transport HTTP 200 locally, wrapping the
+    // actual Lambda return value one level deeper as { statusCode, body }.
+    const rieWrapper = await response.json();
+    // rieWrapper.body is itself a JSON string - parse it to get the real
+    // { status, result: { ..., top_factors }, warnings } / { status, message } object.
+    return JSON.parse(rieWrapper.body);
+  }
+
+  // --- Production: real API Gateway + Lambda proxy integration ---
+  const apiUrl = import.meta.env.VITE_SCREENING_API_URL;
+  const response = await fetch(apiUrl, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(isLocalLambda ? payload : { body: JSON.stringify(payload) }),
+    body: JSON.stringify(payload),
   });
 
-  if (!response.ok) {
-    /* Try to parse an error body from the backend */
-    let errorBody;
-    try {
-      errorBody = await response.json();
-    } catch {
-      throw new Error("SERVER_ERROR");
-    }
-
-    /* Docker Lambda wraps everything in { statusCode, body } */
-    if (errorBody.body) {
-      const parsed = typeof errorBody.body === "string" ? JSON.parse(errorBody.body) : errorBody.body;
-      return parsed; // BLOCK responses with message
-    }
-
-    throw new Error("SERVER_ERROR");
-  }
-
-  const data = await response.json();
-
-  /*
-   * Docker Lambda format: { statusCode: 200, body: "{...}" }
-   * API Gateway format:   { status: "PASS", result: {...}, warnings: [] }
-   */
-  if (data.body !== undefined) {
-    const parsed = typeof data.body === "string" ? JSON.parse(data.body) : data.body;
-    return parsed;
-  }
-
-  return data;
+  // Don't throw on !response.ok - BLOCK legitimately returns HTTP 400 here.
+  // The caller branches on the parsed body's `status` field for
+  // PASS / BLOCK / EXIT, exactly the same way as in dev.
+  return response.json();
 }
