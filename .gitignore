@@ -1,6 +1,16 @@
-SugarGuard-CareBridge/
-├── .gitignore   ← YE
-├── README.md
-├── backend/
-├── frontend/
-└── model/
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Environment files
+.env
+.env.local
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Local dataset
+model/data/*.csv
