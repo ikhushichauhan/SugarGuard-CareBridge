@@ -1,6 +1,8 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import strings from "../i18n/strings";
 import { interpretLabValue } from "../utils/labRanges";
+import { runOcr, OCR_STATUS } from "../utils/ocrClient";
+import { extractLabCandidates } from "../utils/ocrTestMapper";
 import "./LabReportPage.css";
 
 // Supported manual lab tests. `labelKey` points at an i18n string in
@@ -22,13 +24,79 @@ export default function LabReportPage({ lang, onBackToHome, onAddToCarePassport 
   const [submitted, setSubmitted] = useState(null); // { testId, value, unit, interpretation } | null
   const [addedToPassport, setAddedToPassport] = useState(false);
 
+  // ── OCR-specific state (does not affect manual entry above) ──
+  const [ocrStatus, setOcrStatus] = useState("idle"); // idle | processing | done | error
+  const [ocrMessage, setOcrMessage] = useState(null);
+  const [ocrCandidates, setOcrCandidates] = useState([]); // [{testId, value, unit, sourceLine}]
+  const [ocrPopulated, setOcrPopulated] = useState(false); // true once a candidate has been applied to the form
+  const fileInputRef = useRef(null);
+
   const selectedTest = TEST_OPTIONS.find((opt) => opt.id === testType) || null;
+
+  const resetOcrState = () => {
+    setOcrStatus("idle");
+    setOcrMessage(null);
+    setOcrCandidates([]);
+    setOcrPopulated(false);
+  };
+
+  const handleFileSelected = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    resetOcrState();
+    setOcrStatus("processing");
+    setOcrMessage(t.ocrProcessingMsg);
+
+    const ocrResult = await runOcr(file);
+
+    if (ocrResult.status !== OCR_STATUS.OK && ocrResult.status !== OCR_STATUS.LOW_CONFIDENCE) {
+      // UNSUPPORTED_FILE / NO_TEXT_FOUND / ENGINE_ERROR - extraction did
+      // not produce usable text. Existing manual form below remains fully
+      // available and untouched.
+      setOcrStatus("error");
+      setOcrMessage(ocrResult.message || t.ocrGenericErrorMsg);
+      return;
+    }
+
+    const { matches } = extractLabCandidates(ocrResult.rawText);
+
+    if (matches.length === 0) {
+      setOcrStatus("error");
+      setOcrMessage(t.ocrNoSupportedTestFoundMsg);
+      return;
+    }
+
+    setOcrCandidates(matches);
+    setOcrStatus("done");
+    setOcrMessage(
+      ocrResult.status === OCR_STATUS.LOW_CONFIDENCE ? t.ocrLowConfidenceMsg : t.ocrReviewBeforeCheckingMsg
+    );
+  };
+
+  // Applies ONE extracted candidate into the exact same testType/value
+  // state the manual form uses. Values remain fully editable afterwards -
+  // this does not lock or bypass the existing form in any way.
+  const handleApplyCandidate = (candidate) => {
+    setTestType(candidate.testId);
+    setValue(String(candidate.value));
+    setErrors({});
+    setSubmitted(null);
+    setAddedToPassport(false);
+    setOcrPopulated(true);
+  };
+
+  const handleClearOcr = () => {
+    resetOcrState();
+    if (fileInputRef.current) fileInputRef.current.value = "";
+  };
 
   const handleTestChange = (e) => {
     setTestType(e.target.value);
     setErrors((prev) => ({ ...prev, testType: undefined }));
     setSubmitted(null); // changing the test invalidates any prior result
     setAddedToPassport(false);
+    setOcrPopulated(false); // manual change counts as reviewed/edited
   };
 
   const handleValueChange = (e) => {
@@ -36,6 +104,7 @@ export default function LabReportPage({ lang, onBackToHome, onAddToCarePassport 
     setErrors((prev) => ({ ...prev, value: undefined }));
     setSubmitted(null);
     setAddedToPassport(false);
+    setOcrPopulated(false); // manual change counts as reviewed/edited
   };
 
   const validate = () => {
@@ -102,6 +171,8 @@ export default function LabReportPage({ lang, onBackToHome, onAddToCarePassport 
     setErrors({});
     setSubmitted(null);
     setAddedToPassport(false);
+    resetOcrState();
+    if (fileInputRef.current) fileInputRef.current.value = "";
   };
 
   return (
@@ -114,8 +185,75 @@ export default function LabReportPage({ lang, onBackToHome, onAddToCarePassport 
           <p className="sg-lc-sub">{t.labPageSub}</p>
         </div>
 
+        {/* ── OCR Upload (optional) ── */}
+        <div className="sg-lc-ocr-card">
+          <div className="sg-lc-ocr-head">
+            <span className="sg-lc-ocr-badge">{t.ocrBadge}</span>
+            <h3 className="sg-lc-ocr-title">{t.ocrUploadTitle}</h3>
+            <p className="sg-lc-ocr-sub">{t.ocrUploadSub}</p>
+          </div>
+
+          <div className="sg-lc-ocr-body">
+            <label className="sg-lc-ocr-dropzone">
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/jpeg,image/png,image/webp"
+                onChange={handleFileSelected}
+                disabled={ocrStatus === "processing"}
+              />
+              <span className="sg-lc-ocr-dropzone-text">
+                {ocrStatus === "processing" ? t.ocrProcessingMsg : t.ocrUploadPrompt}
+              </span>
+            </label>
+
+            {ocrMessage && (
+              <p className={`sg-lc-ocr-message ${ocrStatus === "error" ? "error" : ""}`}>
+                {ocrMessage}
+              </p>
+            )}
+
+            {ocrCandidates.length > 0 && (
+              <div className="sg-lc-ocr-candidates">
+                <p className="sg-lc-ocr-candidates-label">{t.ocrCandidatesLabel}</p>
+                <div className="sg-lc-ocr-candidates-list">
+                  {ocrCandidates.map((c, idx) => {
+                    const opt = TEST_OPTIONS.find((o) => o.id === c.testId);
+                    const isApplied = testType === c.testId && value === String(c.value);
+                    return (
+                      <button
+                        key={idx}
+                        type="button"
+                        className={`sg-lc-ocr-candidate-chip ${isApplied ? "applied" : ""}`}
+                        onClick={() => handleApplyCandidate(c)}
+                      >
+                        <span className="sg-lc-ocr-chip-test">{opt ? t[opt.labelKey] : c.testId}</span>
+                        <span className="sg-lc-ocr-chip-value">
+                          {c.value} {c.unit}
+                        </span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+
+            {(ocrCandidates.length > 0 || ocrStatus === "error") && (
+              <button type="button" className="sg-lc-ocr-clear-btn" onClick={handleClearOcr}>
+                {t.ocrClearBtn}
+              </button>
+            )}
+          </div>
+        </div>
+
         {/* ── Manual Entry Form ── */}
         <form className="sg-lc-form-card" onSubmit={handleSubmit} noValidate>
+          {ocrPopulated && (
+            <div className="sg-lc-ocr-populated-badge">
+              <span>{t.ocrPopulatedBadge}</span>
+            </div>
+          )}
+
           {/* Test selector */}
           <div className="sg-lc-field">
             <label htmlFor="lab-test-type" className="sg-lc-label">

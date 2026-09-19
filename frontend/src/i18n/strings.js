@@ -263,6 +263,23 @@ const strings = {
     labValueRequired: "Please enter a value.",
     labValueInvalid: "Please enter a valid positive number.",
 
+    /* OCR Lab Report Upload (extraction only - labRanges.js still does all interpretation) */
+    ocrBadge: "Optional",
+    ocrUploadTitle: "Scan a lab report",
+    ocrUploadSub:
+      "Upload a clear photo of your report and we'll try to fill in the test and value for you. You can always review or edit before checking your result.",
+    ocrUploadPrompt: "Tap to upload a photo of your report (JPG or PNG)",
+    ocrProcessingMsg: "Reading your report…",
+    ocrReviewBeforeCheckingMsg: "We found the following in your report. Please review and select the value to check, then confirm before checking your result.",
+    ocrLowConfidenceMsg:
+      "The photo was a bit hard to read clearly. Please double-check the extracted value below before checking your result, or enter it manually.",
+    ocrNoSupportedTestFoundMsg:
+      "We couldn't find a supported test (HbA1c, Fasting Glucose, Random Glucose, or 2-hour OGTT) in this report. Please enter the value manually below.",
+    ocrGenericErrorMsg: "We couldn't read this file. Please enter values manually below.",
+    ocrCandidatesLabel: "Found in your report — tap to use:",
+    ocrClearBtn: "Clear scanned report",
+    ocrPopulatedBadge: "Filled in from your uploaded report — please review before checking",
+
     /* Care Passport Integration */
     addToPassportBtn: "Add to Care Passport →",
     addedToPassportMsg: "Added to Care Passport!",
@@ -537,6 +554,23 @@ const strings = {
     labTestRequired: "कृपया जांच का प्रकार चुनें।",
     labValueRequired: "कृपया एक मान दर्ज करें।",
     labValueInvalid: "कृपया एक मान्य सकारात्मक संख्या दर्ज करें।",
+
+    /* OCR Lab Report Upload */
+    ocrBadge: "वैकल्पिक",
+    ocrUploadTitle: "लैब रिपोर्ट स्कैन करें",
+    ocrUploadSub:
+      "अपनी रिपोर्ट की एक स्पष्ट फ़ोटो अपलोड करें और हम जांच व मान भरने की कोशिश करेंगे। परिणाम जांचने से पहले आप हमेशा समीक्षा या संपादन कर सकते हैं।",
+    ocrUploadPrompt: "अपनी रिपोर्ट की फ़ोटो अपलोड करने के लिए टैप करें (JPG या PNG)",
+    ocrProcessingMsg: "आपकी रिपोर्ट पढ़ी जा रही है…",
+    ocrReviewBeforeCheckingMsg: "हमें आपकी रिपोर्ट में निम्नलिखित मिला। कृपया समीक्षा करें, जांचने के लिए मान चुनें, फिर परिणाम जांचने से पहले पुष्टि करें।",
+    ocrLowConfidenceMsg:
+      "फ़ोटो को स्पष्ट रूप से पढ़ना थोड़ा कठिन था। कृपया परिणाम जांचने से पहले नीचे दिए गए निकाले गए मान की दोबारा जांच करें, या इसे मैन्युअल रूप से दर्ज करें।",
+    ocrNoSupportedTestFoundMsg:
+      "हमें इस रिपोर्ट में कोई समर्थित जांच (HbA1c, फास्टिंग ग्लूकोज़, रैंडम ग्लूकोज़, या 2-घंटे OGTT) नहीं मिली। कृपया नीचे मान मैन्युअल रूप से दर्ज करें।",
+    ocrGenericErrorMsg: "हम इस फ़ाइल को नहीं पढ़ पाए। कृपया नीचे मान मैन्युअल रूप से दर्ज करें।",
+    ocrCandidatesLabel: "आपकी रिपोर्ट में मिला — उपयोग करने के लिए टैप करें:",
+    ocrClearBtn: "स्कैन की गई रिपोर्ट हटाएं",
+    ocrPopulatedBadge: "आपकी अपलोड की गई रिपोर्ट से भरा गया — जांचने से पहले कृपया समीक्षा करें",
 
     /* Care Passport Integration */
     addToPassportBtn: "केयर पासपोर्ट में जोड़ें →",
