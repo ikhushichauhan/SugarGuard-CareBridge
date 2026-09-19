@@ -13,13 +13,14 @@ const TEST_OPTIONS = [
   { id: "ogtt", labelKey: "labTestOGTT", unit: "mg/dL" },
 ];
 
-export default function LabReportPage({ lang, onBackToHome }) {
+export default function LabReportPage({ lang, onBackToHome, onAddToCarePassport }) {
   const t = strings[lang];
 
   const [testType, setTestType] = useState("");
   const [value, setValue] = useState("");
   const [errors, setErrors] = useState({});
   const [submitted, setSubmitted] = useState(null); // { testId, value, unit, interpretation } | null
+  const [addedToPassport, setAddedToPassport] = useState(false);
 
   const selectedTest = TEST_OPTIONS.find((opt) => opt.id === testType) || null;
 
@@ -27,12 +28,14 @@ export default function LabReportPage({ lang, onBackToHome }) {
     setTestType(e.target.value);
     setErrors((prev) => ({ ...prev, testType: undefined }));
     setSubmitted(null); // changing the test invalidates any prior result
+    setAddedToPassport(false);
   };
 
   const handleValueChange = (e) => {
     setValue(e.target.value);
     setErrors((prev) => ({ ...prev, value: undefined }));
     setSubmitted(null);
+    setAddedToPassport(false);
   };
 
   const validate = () => {
@@ -57,6 +60,7 @@ export default function LabReportPage({ lang, onBackToHome }) {
 
   const handleSubmit = (evt) => {
     evt.preventDefault();
+    setAddedToPassport(false);
     if (!validate()) {
       setSubmitted(null);
       return;
@@ -70,6 +74,26 @@ export default function LabReportPage({ lang, onBackToHome }) {
     });
   };
 
+  const handleAddToPassport = () => {
+    if (!submitted || !onAddToCarePassport) return;
+
+    const labData = {
+      testId: submitted.testId,
+      testLabelKey: selectedTest?.labelKey || "labTestHbA1c",
+      value: submitted.value,
+      unit: submitted.unit,
+      interpretation: submitted.interpretation,
+      date: new Intl.DateTimeFormat("en-GB", {
+        day: "numeric",
+        month: "short",
+        year: "numeric",
+      }).format(new Date()),
+    };
+
+    setAddedToPassport(true);
+    onAddToCarePassport(labData);
+  };
+
   // "Back" clears the current check so the user can start over on this
   // same page, without leaving the Lab Checker entirely.
   const handleReset = () => {
@@ -77,6 +101,7 @@ export default function LabReportPage({ lang, onBackToHome }) {
     setValue("");
     setErrors({});
     setSubmitted(null);
+    setAddedToPassport(false);
   };
 
   return (
@@ -196,6 +221,17 @@ export default function LabReportPage({ lang, onBackToHome }) {
             <div className="sg-lc-result-footnotes">
               <p className="sg-lc-result-footnote">{t.labPregnancyNote}</p>
               <p className="sg-lc-result-footnote">{t.labToolDisclaimer}</p>
+            </div>
+
+            {/* ── Add to Care Passport CTA ── */}
+            <div className="sg-lc-add-passport-wrap">
+              <button
+                type="button"
+                className={`sg-lc-add-passport-btn ${addedToPassport ? "added" : ""}`}
+                onClick={handleAddToPassport}
+              >
+                {addedToPassport ? t.addedToPassportMsg : t.addToPassportBtn}
+              </button>
             </div>
           </div>
         )}

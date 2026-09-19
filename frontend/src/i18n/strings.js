@@ -262,6 +262,16 @@ const strings = {
     labTestRequired: "Please select a test type.",
     labValueRequired: "Please enter a value.",
     labValueInvalid: "Please enter a valid positive number.",
+
+    /* Care Passport Integration */
+    addToPassportBtn: "Add to Care Passport →",
+    addedToPassportMsg: "Added to Care Passport!",
+    passportLabSectionTitle: "Lab Test Results",
+    passportLabTestLabel: "Test Name",
+    passportLabValueLabel: "Result Value",
+    passportLabInterpretationLabel: "Interpretation",
+    passportLabExplanationLabel: "Brief Explanation",
+    passportLabDateLabel: "Date Checked",
   },
 
   hi: {
@@ -527,6 +537,16 @@ const strings = {
     labTestRequired: "कृपया जांच का प्रकार चुनें।",
     labValueRequired: "कृपया एक मान दर्ज करें।",
     labValueInvalid: "कृपया एक मान्य सकारात्मक संख्या दर्ज करें।",
+
+    /* Care Passport Integration */
+    addToPassportBtn: "केयर पासपोर्ट में जोड़ें →",
+    addedToPassportMsg: "केयर पासपोर्ट में जोड़ा गया!",
+    passportLabSectionTitle: "लैब परीक्षण परिणाम",
+    passportLabTestLabel: "जांच का नाम",
+    passportLabValueLabel: "परिणाम मान",
+    passportLabInterpretationLabel: "व्याख्या",
+    passportLabExplanationLabel: "संक्षिप्त विवरण",
+    passportLabDateLabel: "जांच की तिथि",
   },
 };
 

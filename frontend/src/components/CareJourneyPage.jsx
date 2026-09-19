@@ -1,7 +1,7 @@
 import strings from "../i18n/strings";
 import "./CareJourneyPage.css";
 
-export default function CareJourneyPage({ result, lang, onBackToResult, onBackToHome }) {
+export default function CareJourneyPage({ result, labResult, lang, onBackToResult, onBackToHome }) {
   const t = strings[lang];
   const isElevated = result?.prediction === 1;
   const bmi = result?.bmi || "--";
@@ -23,10 +23,12 @@ export default function CareJourneyPage({ result, lang, onBackToResult, onBackTo
       <div className="sg-jp-container">
         {/* ── Page Header ── */}
         <div className="sg-jp-header no-print">
-          <button type="button" className="sg-back-btn" onClick={onBackToResult}>
-            <span className="sg-back-arrow">←</span>
-            <span>{t.backToResultBtn}</span>
-          </button>
+          {result && (
+            <button type="button" className="sg-back-btn" onClick={onBackToResult}>
+              <span className="sg-back-arrow">←</span>
+              <span>{t.backToResultBtn}</span>
+            </button>
+          )}
           <h1 className="sg-jp-title">{t.journeyPageTitle}</h1>
           <p className="sg-jp-sub">{t.journeyPageSub}</p>
         </div>
@@ -74,39 +76,82 @@ export default function CareJourneyPage({ result, lang, onBackToResult, onBackTo
 
             {/* Passport Summary Table */}
             <div className="sg-pp-body">
-              <div className="sg-pp-metrics-grid">
-                <div className="sg-pp-metric">
-                  <span className="sg-ppm-label">{t.passportIndicationLabel}</span>
-                  <span className={`sg-ppm-val ${isElevated ? "elevated" : "lower"}`}>
-                    {isElevated ? t.elevatedResult : t.lowerResult}
-                  </span>
+              {result && (
+                <div className="sg-pp-metrics-grid">
+                  <div className="sg-pp-metric">
+                    <span className="sg-ppm-label">{t.passportIndicationLabel}</span>
+                    <span className={`sg-ppm-val ${isElevated ? "elevated" : "lower"}`}>
+                      {isElevated ? t.elevatedResult : t.lowerResult}
+                    </span>
+                  </div>
+                  <div className="sg-pp-metric">
+                    <span className="sg-ppm-label">{t.passportBmiLabel}</span>
+                    <span className="sg-ppm-val">{bmi} kg/m²</span>
+                  </div>
                 </div>
-                <div className="sg-pp-metric">
-                  <span className="sg-ppm-label">{t.passportBmiLabel}</span>
-                  <span className="sg-ppm-val">{bmi} kg/m²</span>
-                </div>
-              </div>
+              )}
 
-              {/* Factors list */}
-              <div className="sg-pp-factors">
-                <h4 className="sg-ppf-title">{t.passportFactorsLabel}</h4>
-                <ul className="sg-ppf-list">
-                  {factors.map((f, idx) => {
-                    const isInc = f.direction === "increased";
-                    return (
-                      <li key={idx} className="sg-ppf-item">
-                        <span className="sg-ppf-bullet">•</span>
-                        <span className="sg-ppf-name">
-                          {t.factorNames[f.feature] || f.feature}
+              {/* Factors list if screening result exists */}
+              {factors.length > 0 && (
+                <div className="sg-pp-factors">
+                  <h4 className="sg-ppf-title">{t.passportFactorsLabel}</h4>
+                  <ul className="sg-ppf-list">
+                    {factors.map((f, idx) => {
+                      const isInc = f.direction === "increased";
+                      return (
+                        <li key={idx} className="sg-ppf-item">
+                          <span className="sg-ppf-bullet">•</span>
+                          <span className="sg-ppf-name">
+                            {t.factorNames[f.feature] || f.feature}
+                          </span>
+                          <span className={`sg-ppf-dir ${isInc ? "inc" : "dec"}`}>
+                            {isInc ? "↑ Elevated signal" : "↓ Lower signal"}
+                          </span>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </div>
+              )}
+
+              {/* Lab Results section (Step 3) inside Passport card */}
+              {labResult && (
+                <div className="sg-pp-lab-section">
+                  <h4 className="sg-ppf-title">{t.passportLabSectionTitle}</h4>
+                  <div className="sg-pp-lab-card">
+                    <div className="sg-pp-lab-grid">
+                      <div className="sg-pp-lab-item">
+                        <span className="sg-pp-lab-label">{t.passportLabTestLabel}:</span>
+                        <span className="sg-pp-lab-val">
+                          {t[labResult.testLabelKey] || labResult.testId}
                         </span>
-                        <span className={`sg-ppf-dir ${isInc ? "inc" : "dec"}`}>
-                          {isInc ? "↑ Elevated signal" : "↓ Lower signal"}
+                      </div>
+                      <div className="sg-pp-lab-item">
+                        <span className="sg-pp-lab-label">{t.passportLabValueLabel}:</span>
+                        <span className="sg-pp-lab-val">
+                          {labResult.value} {labResult.unit}
                         </span>
-                      </li>
-                    );
-                  })}
-                </ul>
-              </div>
+                      </div>
+                      <div className="sg-pp-lab-item">
+                        <span className="sg-pp-lab-label">{t.passportLabInterpretationLabel}:</span>
+                        <span className={`sg-pp-lab-badge tone-${labResult.interpretation?.tone}`}>
+                          {t[labResult.interpretation?.labelKey]}
+                        </span>
+                      </div>
+                      <div className="sg-pp-lab-item">
+                        <span className="sg-pp-lab-label">{t.passportLabDateLabel}:</span>
+                        <span className="sg-pp-lab-val">{labResult.date}</span>
+                      </div>
+                    </div>
+                    {labResult.interpretation?.descKey && (
+                      <div className="sg-pp-lab-desc">
+                        <strong>{t.passportLabExplanationLabel}: </strong>
+                        <span>{t[labResult.interpretation.descKey]}</span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
 
               {/* Discussion prompt box for clinical visit */}
               <div className="sg-pp-prompts">
@@ -129,36 +174,36 @@ export default function CareJourneyPage({ result, lang, onBackToResult, onBackTo
           <h3 className="sg-cjc-title">{t.careJourneyTitle}</h3>
           <div className="sg-cjc-timeline">
             {/* Step 1 */}
-            <div className="sg-cjc-step done">
-              <div className="sg-cjc-circle">✓</div>
+            <div className={`sg-cjc-step ${result ? "done" : ""}`}>
+              <div className="sg-cjc-circle">{result ? "✓" : "1"}</div>
               <div className="sg-cjc-text">
                 <span className="sg-cjc-name">{t.trackerSteps[0]}</span>
-                <span className="sg-cjc-status">Complete</span>
+                <span className="sg-cjc-status">{result ? "Complete" : "Optional"}</span>
               </div>
             </div>
-            <div className="sg-cjc-line done"></div>
+            <div className={`sg-cjc-line ${result ? "done" : ""}`}></div>
 
             {/* Step 2 */}
-            <div className="sg-cjc-step current">
-              <div className="sg-cjc-circle">●</div>
+            <div className={`sg-cjc-step ${result ? "done" : "current"}`}>
+              <div className="sg-cjc-circle">{result ? "✓" : "●"}</div>
               <div className="sg-cjc-text">
                 <span className="sg-cjc-name">{t.trackerSteps[1]}</span>
-                <span className="sg-cjc-status">Active Step</span>
+                <span className="sg-cjc-status">{result ? "Complete" : "Active Step"}</span>
               </div>
             </div>
-            <div className="sg-cjc-line"></div>
+            <div className={`sg-cjc-line ${result || labResult ? "done" : ""}`}></div>
 
-            {/* Step 3 */}
-            <div className="sg-cjc-step">
-              <div className="sg-cjc-circle">3</div>
+            {/* Step 3 (Lab Result Checked) */}
+            <div className={`sg-cjc-step ${labResult ? "done" : result ? "current" : ""}`}>
+              <div className="sg-cjc-circle">{labResult ? "✓" : result ? "●" : "3"}</div>
               <div className="sg-cjc-text">
                 <span className="sg-cjc-name">{t.trackerSteps[2]}</span>
-                <span className="sg-cjc-status">Next</span>
+                <span className="sg-cjc-status">{labResult ? "Complete" : result ? "Active Step" : "Next"}</span>
               </div>
             </div>
-            <div className="sg-cjc-line"></div>
+            <div className={`sg-cjc-line ${labResult ? "done" : ""}`}></div>
 
-            {/* Step 4 */}
+            {/* Step 4 (Follow-up Done - pending clinical follow-up) */}
             <div className="sg-cjc-step">
               <div className="sg-cjc-circle">4</div>
               <div className="sg-cjc-text">
@@ -208,13 +253,15 @@ export default function CareJourneyPage({ result, lang, onBackToResult, onBackTo
             <span>{t.downloadPassportBtn}</span>
           </button>
           <div className="sg-jp-action-links">
-            <button
-              type="button"
-              className="sg-secondary-btn"
-              onClick={onBackToResult}
-            >
-              {t.backToResultBtn}
-            </button>
+            {result && (
+              <button
+                type="button"
+                className="sg-secondary-btn"
+                onClick={onBackToResult}
+              >
+                {t.backToResultBtn}
+              </button>
+            )}
             <button
               type="button"
               className="sg-secondary-btn"

@@ -290,6 +290,42 @@
   margin: 0;
 }
 
+/* ── Add to Care Passport CTA ── */
+.sg-lc-add-passport-wrap {
+  margin-top: 1.25rem;
+  padding-top: 1rem;
+  border-top: 1px solid #eef2f6;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.sg-lc-add-passport-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: #2563eb;
+  color: #ffffff;
+  border: none;
+  padding: 0.85rem 1.6rem;
+  border-radius: 10px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.25);
+}
+
+.sg-lc-add-passport-btn:hover {
+  background: #1d4ed8;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.35);
+}
+
+.sg-lc-add-passport-btn.added {
+  background: #16a34a;
+  box-shadow: 0 2px 8px rgba(22, 163, 74, 0.25);
+}
+
 /* ── Navigation Actions ── */
 .sg-lc-actions {
   display: flex;

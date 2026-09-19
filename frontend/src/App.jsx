@@ -20,6 +20,7 @@ export default function App() {
   const [currentView, setCurrentView] = useState("landing");
   const [loading, setLoading] = useState(false);
   const [response, setResponse] = useState(null); // { status, result, warnings }
+  const [labResult, setLabResult] = useState(null); // { testId, testLabelKey, value, unit, interpretation, date }
   const [error, setError] = useState(null); // { title, message }
 
   const t = strings[lang];
@@ -137,6 +138,11 @@ export default function App() {
     setCurrentView("screening");
   };
 
+  const handleAddLabResultToPassport = (labData) => {
+    setLabResult(labData);
+    setCurrentView("journey");
+  };
+
   const isDarkNav = currentView === "landing" || currentView === "impact";
 
   return (
@@ -198,9 +204,10 @@ export default function App() {
         />
       )}
 
-      {currentView === "journey" && response && (
+      {currentView === "journey" && (response || labResult) && (
         <CareJourneyPage
-          result={response.result}
+          result={response?.result}
+          labResult={labResult}
           lang={lang}
           onBackToResult={handleBackToResult}
           onBackToHome={handleBackToLanding}
@@ -211,6 +218,7 @@ export default function App() {
         <LabReportPage
           lang={lang}
           onBackToHome={handleBackToLanding}
+          onAddToCarePassport={handleAddLabResultToPassport}
         />
       )}
     </div>
