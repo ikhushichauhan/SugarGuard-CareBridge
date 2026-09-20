@@ -41,7 +41,7 @@
 .sg-section-container {
   max-width: 1440px;
   margin: 0 auto;
-  padding: 0 1rem;
+  padding: 0 2.5rem;
   position: relative;
   z-index: 2;
 }
@@ -53,7 +53,7 @@
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  padding: 1.25rem 1rem 2rem;
+  padding: 1.25rem 0 2rem;
   z-index: 2;
   box-sizing: border-box;
 }
@@ -61,6 +61,7 @@
 .sg-hero-container {
   max-width: 1440px;
   margin: 0 auto;
+  padding: 0 2.5rem;
   width: 100%;
   display: grid;
   grid-template-columns: 1.05fr 0.95fr;
@@ -85,7 +86,7 @@
   letter-spacing: 0.25em;
   color: #3b82f6;
   text-transform: uppercase;
-  margin-bottom: 1.25rem;
+  margin-bottom: 1.75rem;
   opacity: 0.9;
 }
 
@@ -95,15 +96,16 @@
   line-height: 1.05;
   letter-spacing: -0.03em;
   color: #ffffff;
-  margin: 0 0 1.5rem 0;
+  margin: 0 0 2rem 0;
   font-family: "Plus Jakarta Sans", sans-serif;
 }
 
 .sg-title-accent {
   font-weight: 700;
-  background: linear-gradient(135deg, #ffffff 0%, #94a3b8 100%);
+  background: linear-gradient(135deg, #ffffff 0%, #60a5fa 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .sg-hero-desc-dark {
@@ -112,14 +114,14 @@
   line-height: 1.7;
   color: #94a3b8;
   max-width: 540px;
-  margin: 0 0 2.25rem 0;
+  margin: 0 0 2.75rem 0;
 }
 
 .sg-hero-actions-dark {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 1rem;
+  gap: 1.35rem;
 }
 
 .sg-cta-btn-dark {
@@ -180,6 +182,35 @@
   overflow: visible;
 }
 
+/* Animated blue glow orb behind the model (pure ambient blue glow, no stroke line) */
+.sg-hero-right-3d::before,
+.sg-hero-right-3d::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.sg-hero-right-3d::before {
+  width: 480px;
+  height: 480px;
+  background: radial-gradient(circle, rgba(37, 99, 235, 0.22) 0%, rgba(59, 130, 246, 0.1) 45%, rgba(59, 130, 246, 0) 70%);
+  filter: blur(40px);
+  animation: sgGlowPulse 6s ease-in-out infinite;
+}
+
+.sg-hero-right-3d::after {
+  width: 340px;
+  height: 340px;
+  background: radial-gradient(circle, rgba(96, 165, 250, 0.3) 0%, rgba(37, 99, 235, 0.12) 50%, rgba(37, 99, 235, 0) 75%);
+  filter: blur(25px);
+  animation: sgGlowPulse 8s ease-in-out 1.2s infinite;
+}
+
 .sg-3d-wrapper {
   width: 100%;
   height: 100%;
@@ -212,9 +243,12 @@
 /* ── 2. TRUST STRIP (Dark Editorial) ── */
 .sg-trust-strip-dark {
   padding: 4rem 0;
-  border-top: 1px solid rgba(255, 255, 255, 0.06);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-  background: rgba(5, 5, 8, 0.5);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(8, 12, 24, 0.45);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .sg-trust-items-dark {
@@ -230,6 +264,11 @@
   display: flex;
   align-items: center;
   gap: 0.75rem;
+  transition: transform 0.25s ease;
+}
+
+.sg-trust-item-dark:hover {
+  transform: translateY(-2px);
 }
 
 .sg-trust-num {
@@ -259,7 +298,7 @@
   margin: 0;
 }
 
-/* ── 3. HOW IT WORKS (Dark Minimalist) ── */
+/* ── 3. HOW IT WORKS (Dark Minimalist & Glassmorphism) ── */
 .sg-how-section-dark {
   padding: 7rem 0;
 }
@@ -277,9 +316,12 @@
   color: #3b82f6;
   text-transform: uppercase;
   margin-bottom: 1rem;
-  padding: 0.3rem 0.85rem;
+  padding: 0.35rem 0.95rem;
+  background: rgba(59, 130, 246, 0.08);
   border: 1px solid rgba(59, 130, 246, 0.25);
   border-radius: 20px;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
 }
 
 .sg-section-title-dark {
@@ -303,24 +345,38 @@
 }
 
 .sg-how-card-dark {
-  background: rgba(15, 23, 42, 0.3);
+  background: rgba(15, 23, 42, 0.35);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
   border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
   padding: 3rem 2.25rem;
-  border-radius: 4px;
+  border-radius: 8px;
   display: flex;
   flex-direction: column;
-  transition: all 0.3s ease;
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), 
+              border-color 0.35s cubic-bezier(0.16, 1, 0.3, 1), 
+              background 0.35s cubic-bezier(0.16, 1, 0.3, 1), 
+              box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .sg-how-card-dark:hover {
-  border-color: rgba(59, 130, 246, 0.4);
-  background: rgba(15, 23, 42, 0.6);
-  transform: translateY(-3px);
+  border-color: rgba(59, 130, 246, 0.45);
+  background: rgba(15, 23, 42, 0.65);
+  transform: translateY(-6px);
+  box-shadow: 0 18px 42px rgba(0, 0, 0, 0.4), 0 0 24px rgba(59, 130, 246, 0.15);
 }
 
 .sg-how-card-dark.highlight {
   border-color: rgba(59, 130, 246, 0.3);
-  background: rgba(30, 41, 59, 0.3);
+  background: rgba(30, 41, 59, 0.4);
+  box-shadow: 0 10px 36px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+.sg-how-card-dark.highlight:hover {
+  border-color: rgba(96, 165, 250, 0.5);
+  background: rgba(30, 41, 59, 0.7);
+  box-shadow: 0 20px 48px rgba(0, 0, 0, 0.45), 0 0 30px rgba(59, 130, 246, 0.2);
 }
 
 .sg-card-num-dark {
@@ -345,12 +401,13 @@
   margin: 0;
 }
 
-/* ── 4. MAIN PRODUCT VALUE (Editorial Dark Frame) ── */
+/* ── 4. MAIN PRODUCT VALUE (Editorial Dark Frame & Glassmorphism) ── */
 .sg-value-section-dark {
   padding: 7rem 0;
-  background: linear-gradient(180deg, rgba(5, 5, 8, 0.8) 0%, rgba(10, 15, 25, 0.9) 100%);
+  background: linear-gradient(180deg, rgba(5, 5, 8, 0.85) 0%, rgba(10, 15, 25, 0.95) 100%);
   border-top: 1px solid rgba(255, 255, 255, 0.06);
   border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  position: relative;
 }
 
 .sg-value-content-dark {
@@ -367,6 +424,10 @@
   text-transform: uppercase;
   margin-bottom: 1.25rem;
   display: inline-block;
+  padding: 0.3rem 0.85rem;
+  background: rgba(59, 130, 246, 0.08);
+  border: 1px solid rgba(59, 130, 246, 0.2);
+  border-radius: 20px;
 }
 
 .sg-value-title-dark {
@@ -388,12 +449,26 @@
   display: flex;
   align-items: center;
   gap: 1.25rem;
-  background: rgba(15, 23, 42, 0.4);
+  background: rgba(15, 23, 42, 0.45);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
   padding: 1.35rem 1.65rem;
-  border-radius: 4px;
+  border-radius: 8px;
   font-size: 1rem;
   color: #e2e8f0;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+              background 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.sg-value-item-dark:hover {
+  transform: translateY(-3px);
+  border-color: rgba(59, 130, 246, 0.4);
+  background: rgba(15, 23, 42, 0.7);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.35), 0 0 15px rgba(59, 130, 246, 0.12);
 }
 
 .sg-value-bullet {
@@ -403,7 +478,7 @@
   letter-spacing: 0.1em;
 }
 
-/* ── 5. WHAT THIS IS / ISN'T (Editorial Dual Columns) ── */
+/* ── 5. WHAT THIS IS / ISN'T (Editorial Dual Columns & Glassmorphism) ── */
 .sg-what-section-dark {
   padding: 7rem 0;
 }
@@ -415,10 +490,21 @@
 }
 
 .sg-what-card-dark {
-  background: rgba(15, 23, 42, 0.25);
+  background: rgba(15, 23, 42, 0.3);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.3);
   padding: 3rem 2.5rem;
-  border-radius: 4px;
+  border-radius: 8px;
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.sg-what-card-dark:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 48px rgba(0, 0, 0, 0.45), 0 0 20px rgba(59, 130, 246, 0.1);
 }
 
 .sg-what-card-dark.helps {
@@ -488,13 +574,20 @@
 .sg-final-cta-section-dark {
   padding: 8rem 0;
   border-top: 1px solid rgba(255, 255, 255, 0.06);
-  background: radial-gradient(circle at center, rgba(30, 58, 138, 0.15) 0%, rgba(3, 3, 4, 1) 70%);
+  background: radial-gradient(circle at center, rgba(30, 58, 138, 0.18) 0%, rgba(3, 3, 4, 1) 70%);
 }
 
 .sg-final-cta-box-dark {
   text-align: center;
   max-width: 760px;
   margin: 0 auto;
+  padding: 3.5rem 2.5rem;
+  background: rgba(15, 23, 42, 0.25);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.35);
 }
 
 .sg-final-cta-title-dark {
@@ -537,9 +630,10 @@
 }
 
 .sg-footer-logo-dark {
+  font-family: "Outfit", "Plus Jakarta Sans", sans-serif;
   font-size: 1.15rem;
-  font-weight: 700;
-  letter-spacing: 0.05em;
+  font-weight: 650;
+  letter-spacing: 0.02em;
   color: #ffffff;
 }
 
@@ -588,6 +682,42 @@
   }
 }
 
+@keyframes sgGlowPulse {
+  0%, 100% {
+    opacity: 0.85;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  50% {
+    opacity: 0.45;
+    transform: translate(-50%, -50%) scale(1.15);
+  }
+}
+
+/* ── Scroll Reveal Animations ── */
+@supports (animation-timeline: view()) {
+  .sg-how-card-dark,
+  .sg-value-item-dark,
+  .sg-what-card-dark,
+  .sg-section-header-dark,
+  .sg-trust-strip-dark,
+  .sg-final-cta-box-dark {
+    animation: sgScrollReveal auto cubic-bezier(0.16, 1, 0.3, 1) both;
+    animation-timeline: view();
+    animation-range: entry 10% cover 30%;
+  }
+}
+
+@keyframes sgScrollReveal {
+  from {
+    opacity: 0;
+    transform: translateY(32px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 /* ── Responsive Design ── */
 @media (max-width: 1080px) {
   .sg-hero-container {
@@ -612,6 +742,16 @@
     height: 520px;
   }
 
+  .sg-hero-right-3d::before {
+    width: 320px;
+    height: 320px;
+  }
+
+  .sg-hero-right-3d::after {
+    width: 440px;
+    height: 440px;
+  }
+
   .sg-how-grid-dark {
     grid-template-columns: 1fr;
   }
@@ -632,5 +772,15 @@
 
   .sg-hero-right-3d {
     height: 420px;
+  }
+
+  .sg-hero-right-3d::before {
+    width: 260px;
+    height: 260px;
+  }
+
+  .sg-hero-right-3d::after {
+    width: 360px;
+    height: 360px;
   }
 }

@@ -2,7 +2,7 @@
    SugarGuard CareBridge — Global Base & Dark Theme
    ═══════════════════════════════════════════════ */
 
-@import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700;800&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;600;700&display=swap");
 
 *,
 *::before,
@@ -80,4 +80,26 @@ input[type="number"] {
 
 ::-webkit-scrollbar-thumb:hover {
   background: #3b82f6;
+}
+
+/* ── Scroll Reveal & Fluid Transition Utilities ── */
+.sg-scroll-reveal,
+.sg-how-card-dark,
+.sg-value-item-dark,
+.sg-what-card-dark,
+.sg-lc-form-card,
+.sg-lc-ocr-card,
+.sg-trust-strip-dark,
+.sg-final-cta-box-dark,
+.sg-impact-grid-card {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1), 
+              transform 0.65s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+
+.sg-revealed {
+  opacity: 1 !important;
+  transform: translateY(0) !important;
 }

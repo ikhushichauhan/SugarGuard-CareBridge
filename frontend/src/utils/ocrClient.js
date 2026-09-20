@@ -97,11 +97,11 @@ export async function runOcr(file) {
     }
 
     return { status: OCR_STATUS.OK, rawText, confidence, message: null };
-  } catch (err) {
+  } catch {
     if (worker) {
       try {
         await worker.terminate();
-      } catch (_) {
+      } catch {
         /* ignore cleanup error */
       }
     }

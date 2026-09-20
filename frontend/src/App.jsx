@@ -15,13 +15,53 @@ import ErrorBanner from "./components/ErrorBanner";
 import "./App.css";
 
 export default function App() {
-  const [lang, setLang] = useState("en");
+  const [lang, setLang] = useState(() => {
+    try {
+      return localStorage.getItem("sg_lang") || "en";
+    } catch {
+      return "en";
+    }
+  });
+
   // Views: "landing" | "screening" | "impact" | "processing" | "result" | "journey" | "labChecker"
-  const [currentView, setCurrentView] = useState("landing");
+  const [currentView, setCurrentView] = useState(() => {
+    try {
+      const savedView = localStorage.getItem("sg_current_view");
+      const savedResponse = localStorage.getItem("sg_screening_response");
+      const savedLab = localStorage.getItem("sg_lab_result");
+
+      if (!savedView || savedView === "processing") return "landing";
+      if (savedView === "result" && !savedResponse) return "landing";
+      if (savedView === "journey" && !savedResponse && !savedLab) return "landing";
+
+      return savedView;
+    } catch {
+      return "landing";
+    }
+  });
+
   const [loading, setLoading] = useState(false);
-  const [response, setResponse] = useState(null); // { status, result, warnings }
-  const [labResult, setLabResult] = useState(null); // { testId, testLabelKey, value, unit, interpretation, date }
+
+  const [response, setResponse] = useState(() => {
+    try {
+      const saved = localStorage.getItem("sg_screening_response");
+      return saved ? JSON.parse(saved) : null;
+    } catch {
+      return null;
+    }
+  });
+
+  const [labResult, setLabResult] = useState(() => {
+    try {
+      const saved = localStorage.getItem("sg_lab_result");
+      return saved ? JSON.parse(saved) : null;
+    } catch {
+      return null;
+    }
+  });
+
   const [error, setError] = useState(null); // { title, message }
+  const [screeningResetKey, setScreeningResetKey] = useState(0);
 
   const t = strings[lang];
 
@@ -29,9 +69,76 @@ export default function App() {
     setLang((prev) => (prev === "en" ? "hi" : "en"));
   };
 
+  // Sync state changes with localStorage
+  useEffect(() => {
+    try {
+      localStorage.setItem("sg_lang", lang);
+    } catch {
+      /* ignore */
+    }
+  }, [lang]);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem("sg_current_view", currentView);
+    } catch {
+      /* ignore */
+    }
+  }, [currentView]);
+
+  useEffect(() => {
+    try {
+      if (response) {
+        localStorage.setItem("sg_screening_response", JSON.stringify(response));
+      } else {
+        localStorage.removeItem("sg_screening_response");
+      }
+    } catch {
+      /* ignore */
+    }
+  }, [response]);
+
+  useEffect(() => {
+    try {
+      if (labResult) {
+        localStorage.setItem("sg_lab_result", JSON.stringify(labResult));
+      } else {
+        localStorage.removeItem("sg_lab_result");
+      }
+    } catch {
+      /* ignore */
+    }
+  }, [labResult]);
+
   // Scroll to top on view change
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
+  }, [currentView]);
+
+  // Smooth Scroll Reveal Observer
+  useEffect(() => {
+    const observerCallback = (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("sg-revealed");
+        } else if (entry.boundingClientRect.top > 0) {
+          // Gracefully fade out when scrolling back up past element
+          entry.target.classList.remove("sg-revealed");
+        }
+      });
+    };
+
+    const observer = new IntersectionObserver(observerCallback, {
+      threshold: 0.08,
+      rootMargin: "0px 0px -40px 0px",
+    });
+
+    const selector = ".sg-scroll-reveal, .sg-how-card-dark, .sg-value-item-dark, .sg-what-card-dark, .sg-lc-form-card, .sg-lc-ocr-card, .sg-trust-strip-dark, .sg-final-cta-box-dark, .sg-impact-grid-card";
+    const targets = document.querySelectorAll(selector);
+
+    targets.forEach((target) => observer.observe(target));
+
+    return () => observer.disconnect();
   }, [currentView]);
 
   const handleStartScreening = () => {
@@ -135,6 +242,13 @@ export default function App() {
   const handleNewScreening = () => {
     setResponse(null);
     setError(null);
+    try {
+      localStorage.removeItem("sg_screening_response");
+      localStorage.removeItem("sg_screening_form");
+    } catch {
+      /* ignore */
+    }
+    setScreeningResetKey((prev) => prev + 1);
     setCurrentView("screening");
   };
 
@@ -143,7 +257,7 @@ export default function App() {
     setCurrentView("journey");
   };
 
-  const isDarkNav = currentView === "landing" || currentView === "impact";
+  const isDarkNav = true;
 
   return (
     <div className="sg-app">
@@ -183,6 +297,7 @@ export default function App() {
 
       {currentView === "screening" && (
         <ScreeningPage
+          key={screeningResetKey}
           lang={lang}
           onBack={handleBackToLanding}
           onSubmit={handleScreeningSubmit}

@@ -1,3 +1,4 @@
+/* global process */
 import { extractLabCandidates } from "./ocrTestMapper.js";
 import { LAB_TEST_IDS } from "./labRanges.js";
 

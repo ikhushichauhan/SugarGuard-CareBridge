@@ -1,4 +1,3 @@
-import React from "react";
 import AnatomicalOrganModel from "./AnatomicalOrganModel";
 import yoImg from "../assets/yo.png";
 import newImg from "../assets/new.png";

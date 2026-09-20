@@ -1,14 +1,16 @@
+import os
 import json
 import joblib
 import pandas as pd
 
 from reliability_gate import check
 
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
-model = joblib.load("model_8field.pkl")
-scaler = joblib.load("scaler_8field.pkl")
+model = joblib.load(os.path.join(BASE_DIR, "model_8field.pkl"))
+scaler = joblib.load(os.path.join(BASE_DIR, "scaler_8field.pkl"))
 
-with open("coefficients_8field.json") as f:
+with open(os.path.join(BASE_DIR, "coefficients_8field.json")) as f:
     _coef_data = json.load(f)
 COEF_MAP = {c["feature"]: c["coefficient"] for c in _coef_data["coefficients"]}
 

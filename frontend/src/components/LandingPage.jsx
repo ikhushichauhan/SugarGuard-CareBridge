@@ -1,4 +1,4 @@
-import React, { Suspense } from "react";
+import { Suspense } from "react";
 import strings from "../i18n/strings";
 import HumanBodyModel from "./HumanBodyModel";
 import "./LandingPage.css";
@@ -13,7 +13,7 @@ export default function LandingPage({ lang, onStartScreening }) {
         <div className="sg-hero-container">
           {/* Left Column: Editorial Typography */}
           <div className="sg-hero-left">
-            <span className="sg-eyebrow">SUGAR GUARD CAREBRIDGE</span>
+            <span className="sg-eyebrow"> </span>
 
             <h1 className="sg-hero-title-dark">
               From Screening<br />
@@ -23,6 +23,7 @@ export default function LandingPage({ lang, onStartScreening }) {
             <p className="sg-hero-desc-dark">
               Understand your diabetes screening result, see what influenced it, and prepare for the next appropriate care step.
             </p>
+<br/><br/><br/><br/>
 
             <div className="sg-hero-actions-dark">
               <button
@@ -35,7 +36,7 @@ export default function LandingPage({ lang, onStartScreening }) {
               </button>
 
               <span className="sg-disclaimer-dark">
-                Screening indication only • Not a medical diagnosis
+                
               </span>
             </div>
           </div>

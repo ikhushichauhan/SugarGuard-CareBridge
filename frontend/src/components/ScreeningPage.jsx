@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import strings from "../i18n/strings";
 import "./ScreeningPage.css";
 
@@ -17,7 +17,23 @@ const INITIAL_FORM = {
 
 export default function ScreeningPage({ lang, onSubmit, loading }) {
   const t = strings[lang];
-  const [form, setForm] = useState({ ...INITIAL_FORM });
+  const [form, setForm] = useState(() => {
+    try {
+      const saved = localStorage.getItem("sg_screening_form");
+      return saved ? JSON.parse(saved) : { ...INITIAL_FORM };
+    } catch {
+      return { ...INITIAL_FORM };
+    }
+  });
+
+  useEffect(() => {
+    try {
+      localStorage.setItem("sg_screening_form", JSON.stringify(form));
+    } catch {
+      // ignore
+    }
+  }, [form]);
+
   const [errors, setErrors] = useState({});
 
   const set = (field, value) => {
@@ -80,8 +96,8 @@ export default function ScreeningPage({ lang, onSubmit, loading }) {
   };
 
   /* ── Pill Button Toggle for Yes / No ── */
-  const PillQuestion = ({ id, label, value, onChange, error }) => (
-    <div className="sg-form-group" id={`field-${id}`}>
+  const renderPillQuestion = ({ id, label, value, onChange, error }) => (
+    <div key={id} className="sg-form-group" id={`field-${id}`}>
       <label className="sg-form-label">{label}</label>
       <div className="sg-pill-group">
         <button
@@ -233,37 +249,37 @@ export default function ScreeningPage({ lang, onSubmit, loading }) {
                 <p className="sg-card-desc">{t.sec2Desc}</p>
               </div>
 
-              <PillQuestion
-                id="high_bp"
-                label={t.highBP}
-                value={form.high_bp}
-                onChange={(val) => set("high_bp", val)}
-                error={errors.high_bp}
-              />
+              {renderPillQuestion({
+                id: "high_bp",
+                label: t.highBP,
+                value: form.high_bp,
+                onChange: (val) => set("high_bp", val),
+                error: errors.high_bp,
+              })}
 
-              <PillQuestion
-                id="high_chol"
-                label={t.highChol}
-                value={form.high_chol}
-                onChange={(val) => set("high_chol", val)}
-                error={errors.high_chol}
-              />
+              {renderPillQuestion({
+                id: "high_chol",
+                label: t.highChol,
+                value: form.high_chol,
+                onChange: (val) => set("high_chol", val),
+                error: errors.high_chol,
+              })}
 
-              <PillQuestion
-                id="smoker"
-                label={t.smoker}
-                value={form.smoker}
-                onChange={(val) => set("smoker", val)}
-                error={errors.smoker}
-              />
+              {renderPillQuestion({
+                id: "smoker",
+                label: t.smoker,
+                value: form.smoker,
+                onChange: (val) => set("smoker", val),
+                error: errors.smoker,
+              })}
 
-              <PillQuestion
-                id="phys_activity"
-                label={t.physActivity}
-                value={form.phys_activity}
-                onChange={(val) => set("phys_activity", val)}
-                error={errors.phys_activity}
-              />
+              {renderPillQuestion({
+                id: "phys_activity",
+                label: t.physActivity,
+                value: form.phys_activity,
+                onChange: (val) => set("phys_activity", val),
+                error: errors.phys_activity,
+              })}
 
               <div className="sg-form-group" id="field-gen_health">
                 <label htmlFor="gen_health" className="sg-form-label">{t.genHealth}</label>

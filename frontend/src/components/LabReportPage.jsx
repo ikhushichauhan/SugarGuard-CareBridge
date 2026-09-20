@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import strings from "../i18n/strings";
 import { interpretLabValue } from "../utils/labRanges";
 import { runOcr, OCR_STATUS } from "../utils/ocrClient";
@@ -18,11 +18,54 @@ const TEST_OPTIONS = [
 export default function LabReportPage({ lang, onBackToHome, onAddToCarePassport }) {
   const t = strings[lang];
 
-  const [testType, setTestType] = useState("");
-  const [value, setValue] = useState("");
+  const [testType, setTestType] = useState(() => {
+    try {
+      const saved = JSON.parse(localStorage.getItem("sg_lab_form") || "{}");
+      return saved.testType || "";
+    } catch {
+      return "";
+    }
+  });
+
+  const [value, setValue] = useState(() => {
+    try {
+      const saved = JSON.parse(localStorage.getItem("sg_lab_form") || "{}");
+      return saved.value || "";
+    } catch {
+      return "";
+    }
+  });
+
   const [errors, setErrors] = useState({});
-  const [submitted, setSubmitted] = useState(null); // { testId, value, unit, interpretation } | null
-  const [addedToPassport, setAddedToPassport] = useState(false);
+
+  const [submitted, setSubmitted] = useState(() => {
+    try {
+      const saved = JSON.parse(localStorage.getItem("sg_lab_form") || "{}");
+      return saved.submitted || null;
+    } catch {
+      return null;
+    }
+  });
+
+  const [addedToPassport, setAddedToPassport] = useState(() => {
+    try {
+      const saved = JSON.parse(localStorage.getItem("sg_lab_form") || "{}");
+      return saved.addedToPassport || false;
+    } catch {
+      return false;
+    }
+  });
+
+  useEffect(() => {
+    try {
+      localStorage.setItem(
+        "sg_lab_form",
+        JSON.stringify({ testType, value, submitted, addedToPassport })
+      );
+    } catch {
+      // ignore
+    }
+  }, [testType, value, submitted, addedToPassport]);
 
   // ── OCR-specific state (does not affect manual entry above) ──
   const [ocrStatus, setOcrStatus] = useState("idle"); // idle | processing | done | error

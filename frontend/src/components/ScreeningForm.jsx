@@ -73,8 +73,8 @@ export default function ScreeningForm({ lang, onSubmit, loading }) {
   };
 
   /* ── Helpers ── */
-  const YesNo = ({ field, label }) => (
-    <fieldset className="sf-field sf-yesno">
+  const renderYesNo = (field, label) => (
+    <fieldset key={field} className="sf-field sf-yesno">
       <legend>{label}</legend>
       <div className="sf-toggle-group">
         <button
@@ -165,10 +165,10 @@ export default function ScreeningForm({ lang, onSubmit, loading }) {
       </div>
 
       {/* ── Yes / No questions ── */}
-      <YesNo field="high_bp" label={t.highBP} />
-      <YesNo field="high_chol" label={t.highChol} />
-      <YesNo field="smoker" label={t.smoker} />
-      <YesNo field="phys_activity" label={t.physActivity} />
+      {renderYesNo("high_bp", t.highBP)}
+      {renderYesNo("high_chol", t.highChol)}
+      {renderYesNo("smoker", t.smoker)}
+      {renderYesNo("phys_activity", t.physActivity)}
 
       {/* ── General health ── */}
       <div className="sf-field">
@@ -191,7 +191,7 @@ export default function ScreeningForm({ lang, onSubmit, loading }) {
       </div>
 
       {/* ── Already diagnosed ── */}
-      <YesNo field="already_diagnosed" label={t.alreadyDiagnosed} />
+      {renderYesNo("already_diagnosed", t.alreadyDiagnosed)}
 
       {/* ── Submit ── */}
       <button type="submit" className="sf-submit" disabled={loading}>

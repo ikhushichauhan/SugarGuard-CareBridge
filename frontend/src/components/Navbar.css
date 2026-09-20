@@ -22,7 +22,7 @@
 .sg-nav-container {
   max-width: 1440px;
   margin: 0 auto;
-  padding: 0.82rem 2rem;
+  padding: 0.82rem 2.5rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -62,10 +62,11 @@
 }
 
 .sg-brand-name {
+  font-family: "Outfit", "Plus Jakarta Sans", sans-serif;
   font-size: 1.2rem;
-  font-weight: 800;
+  font-weight: 650;
   color: #0f2b48;
-  letter-spacing: -0.025em;
+  letter-spacing: 0.01em;
 }
 
 .sg-brand-name.dark-text { color: #ffffff; }
@@ -165,7 +166,8 @@
 }
 
 .sg-navbar-dark .sg-lang-icon-btn {
-  border-color: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.35);
+  color: #ffffff;
 }
 
 .sg-lang-icon-btn:hover {
@@ -303,6 +305,6 @@
 
 @media (max-width: 520px) {
   .sg-nav-container { padding: 0.75rem 1.25rem; }
-  .sg-brand-name   { font-size: 1.08rem; }
+  .sg-brand-name   { font-size: 1.08rem; font-weight: 650; }
   .sg-brand-bridge { font-size: 1rem; }
 }
