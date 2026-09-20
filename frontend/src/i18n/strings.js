@@ -52,7 +52,8 @@ const strings = {
     valuePoint1: "Clear, non-alarmist screening indication",
     valuePoint2: "Understand key contributing model factors",
     valuePoint3: "Safe, standardized confirmation guidance",
-    valuePoint4: "Track your care journey from screening to test",
+    valuePoint4: "Track your care journey from screening through follow-up",
+    valuePoint5: "Add lab results to your Care Passport for continuity",
 
     /* ── What this is / isn't ── */
     whatSectionTitle: "Built for clarity, safety, and trust",
@@ -61,7 +62,7 @@ const strings = {
     helps1: "Understand your screening risk indication",
     helps2: "See transparent model contribution signals",
     helps3: "Prepare structured questions for your doctor visit",
-    helps4: "Track your progression toward confirmatory testing",
+    helps4: "Track your progression from screening through confirmation and follow-up",
     doesNotTitle: "This tool does not:",
     doesNot1: "Diagnose diabetes or prediabetes",
     doesNot2: "Prescribe medication, treatment, or restrictive diets",
@@ -358,7 +359,8 @@ const strings = {
     valuePoint1: "स्पष्ट और गैर-चिंताजनक स्क्रीनिंग संकेत",
     valuePoint2: "मॉडल के प्रमुख योगदान कारकों को समझें",
     valuePoint3: "सुरक्षित और मानकीकृत पुष्टि मार्गदर्शन",
-    valuePoint4: "स्क्रीनिंग से परीक्षण तक अपनी देखभाल यात्रा को ट्रैक करें",
+    valuePoint4: "स्क्रीनिंग से फॉलो-अप तक अपनी देखभाल यात्रा को ट्रैक करें",
+    valuePoint5: "निरंतरता के लिए अपने केयर पासपोर्ट में लैब परिणाम जोड़ें",
 
     /* ── What this is / isn't ── */
     whatSectionTitle: "स्पष्टता, सुरक्षा और विश्वास के लिए निर्मित",
@@ -367,7 +369,7 @@ const strings = {
     helps1: "अपने स्क्रीनिंग जोखिम संकेत को समझने में",
     helps2: "पारदर्शी मॉडल योगदान संकेतों को देखने में",
     helps3: "डॉक्टर से मिलने के लिए महत्वपूर्ण प्रश्न तैयार करने में",
-    helps4: "पुष्टि परीक्षण की दिशा में अपनी प्रगति ट्रैक करने में",
+    helps4: "स्क्रीनिंग से पुष्टि और फॉलो-अप तक अपनी प्रगति ट्रैक करने में",
     doesNotTitle: "यह टूल यह नहीं करता:",
     doesNot1: "मधुमेह या प्रीडायबिटीज का निदान करना",
     doesNot2: "दवाएं, उपचार या प्रतिबंधात्मक आहार निर्धारित करना",

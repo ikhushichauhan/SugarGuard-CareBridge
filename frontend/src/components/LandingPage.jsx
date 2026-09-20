@@ -135,6 +135,10 @@ export default function LandingPage({ lang, onStartScreening }) {
                 <span className="sg-value-bullet">04</span>
                 <span>{t.valuePoint4}</span>
               </div>
+              <div className="sg-value-item-dark">
+                <span className="sg-value-bullet">05</span>
+                <span>{t.valuePoint5}</span>
+              </div>
             </div>
           </div>
         </div>
