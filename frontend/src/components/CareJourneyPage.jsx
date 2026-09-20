@@ -1,11 +1,84 @@
+import { useState, useEffect, useRef } from "react";
 import strings from "../i18n/strings";
 import "./CareJourneyPage.css";
+
+// ── Follow-up tracking (localStorage-backed, component-local) ──
+// This is a NEW, independent piece of state (does not overlap with the
+// existing `result` / `labResult` props), so it is kept local to this
+// component with its own persistence rather than threading a new prop/
+// setter through App.jsx - avoids creating a second parallel state
+// system for data App.jsx already owns.
+const FOLLOWUP_STORAGE_KEY = "sugarguard_followup_status";
+
+function loadFollowUpStatus() {
+  try {
+    const raw = localStorage.getItem(FOLLOWUP_STORAGE_KEY);
+    if (!raw) return { followUpDone: false, followUpDate: null };
+    const parsed = JSON.parse(raw);
+    return {
+      followUpDone: Boolean(parsed.followUpDone),
+      followUpDate: parsed.followUpDate || null,
+    };
+  } catch {
+    return { followUpDone: false, followUpDate: null };
+  }
+}
+
+function saveFollowUpStatus(status) {
+  try {
+    localStorage.setItem(FOLLOWUP_STORAGE_KEY, JSON.stringify(status));
+  } catch {
+    // localStorage may be unavailable (private browsing, storage full,
+    // etc.) - fail silently rather than crashing the Care Journey page.
+  }
+}
+
+function formatDisplayDate(isoDateStr) {
+  if (!isoDateStr) return "";
+  const d = new Date(`${isoDateStr}T00:00:00`);
+  if (Number.isNaN(d.getTime())) return isoDateStr;
+  return new Intl.DateTimeFormat("en-GB", {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+  }).format(d);
+}
 
 export default function CareJourneyPage({ result, labResult, lang, onBackToResult, onBackToHome }) {
   const t = strings[lang];
   const isElevated = result?.prediction === 1;
   const bmi = result?.bmi || "--";
   const factors = result?.top_factors || [];
+
+  const [followUp, setFollowUp] = useState(() => loadFollowUpStatus());
+  const [showConfirmMsg, setShowConfirmMsg] = useState(false);
+  const confirmTimeoutRef = useRef(null);
+
+  useEffect(() => {
+    // Clean up any pending auto-dismiss timer on unmount.
+    return () => {
+      if (confirmTimeoutRef.current) clearTimeout(confirmTimeoutRef.current);
+    };
+  }, []);
+
+  const handleMarkFollowUpDone = () => {
+    const todayIso = new Date().toISOString().slice(0, 10); // YYYY-MM-DD
+    const newStatus = { followUpDone: true, followUpDate: todayIso };
+    setFollowUp(newStatus);
+    saveFollowUpStatus(newStatus);
+
+    setShowConfirmMsg(true);
+    if (confirmTimeoutRef.current) clearTimeout(confirmTimeoutRef.current);
+    confirmTimeoutRef.current = setTimeout(() => setShowConfirmMsg(false), 4000);
+  };
+
+  const handleMarkIncomplete = () => {
+    const resetStatus = { followUpDone: false, followUpDate: null };
+    setFollowUp(resetStatus);
+    saveFollowUpStatus(resetStatus);
+    setShowConfirmMsg(false);
+    if (confirmTimeoutRef.current) clearTimeout(confirmTimeoutRef.current);
+  };
 
   // Formatted date string
   const todayStr = new Intl.DateTimeFormat("en-GB", {
@@ -153,6 +226,28 @@ export default function CareJourneyPage({ result, labResult, lang, onBackToResul
                 </div>
               )}
 
+              {/* Follow-up Status section (Step 4) inside Passport card */}
+              {followUp.followUpDone && (
+                <div className="sg-pp-followup-section">
+                  <h4 className="sg-ppf-title">{t.passportFollowUpTitle}</h4>
+                  <div className="sg-pp-lab-card">
+                    <div className="sg-pp-lab-grid">
+                      <div className="sg-pp-lab-item">
+                        <span className="sg-pp-lab-label">{t.passportFollowUpStatusLabel}:</span>
+                        <span className="sg-pp-lab-val">{t.passportFollowUpStatusDone}</span>
+                      </div>
+                      <div className="sg-pp-lab-item">
+                        <span className="sg-pp-lab-label">{t.passportFollowUpDateLabel}:</span>
+                        <span className="sg-pp-lab-val">{formatDisplayDate(followUp.followUpDate)}</span>
+                      </div>
+                    </div>
+                    <div className="sg-pp-lab-desc">
+                      <span>{t.passportFollowUpDisclaimer}</span>
+                    </div>
+                  </div>
+                </div>
+              )}
+
               {/* Discussion prompt box for clinical visit */}
               <div className="sg-pp-prompts">
                 <strong>Recommended for Clinical Discussion:</strong>
@@ -203,15 +298,47 @@ export default function CareJourneyPage({ result, labResult, lang, onBackToResul
             </div>
             <div className={`sg-cjc-line ${labResult ? "done" : ""}`}></div>
 
-            {/* Step 4 (Follow-up Done - pending clinical follow-up) */}
-            <div className="sg-cjc-step">
-              <div className="sg-cjc-circle">4</div>
+            {/* Step 4 (Follow-up Done) */}
+            <div className={`sg-cjc-step ${followUp.followUpDone ? "done" : labResult ? "current" : ""}`}>
+              <div className="sg-cjc-circle">{followUp.followUpDone ? "✓" : labResult ? "●" : "4"}</div>
               <div className="sg-cjc-text">
                 <span className="sg-cjc-name">{t.trackerSteps[3]}</span>
-                <span className="sg-cjc-status">Final</span>
+                <span className="sg-cjc-status">
+                  {followUp.followUpDone
+                    ? `${t.followUpCompletedOn} ${formatDisplayDate(followUp.followUpDate)}`
+                    : labResult
+                    ? t.followUpStatusActive
+                    : t.followUpStatusFinal}
+                </span>
+
+                {labResult && !followUp.followUpDone && (
+                  <button
+                    type="button"
+                    className="sg-followup-btn no-print"
+                    onClick={handleMarkFollowUpDone}
+                  >
+                    {t.followUpDoneBtn}
+                  </button>
+                )}
+
+                {followUp.followUpDone && (
+                  <button
+                    type="button"
+                    className="sg-followup-undo-link no-print"
+                    onClick={handleMarkIncomplete}
+                  >
+                    {t.followUpMarkIncomplete}
+                  </button>
+                )}
               </div>
             </div>
           </div>
+
+          {showConfirmMsg && (
+            <div className="sg-followup-confirm-msg no-print">
+              <span>✓ {t.followUpConfirmedMsg}</span>
+            </div>
+          )}
         </div>
 
         {/* ── 4. What to Discuss Before Your Visit ── */}

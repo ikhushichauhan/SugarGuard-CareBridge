@@ -289,6 +289,20 @@ const strings = {
     passportLabInterpretationLabel: "Interpretation",
     passportLabExplanationLabel: "Brief Explanation",
     passportLabDateLabel: "Date Checked",
+
+    /* Follow-up Done (Step 4) - tracking only, not medical clearance */
+    followUpDoneBtn: "Mark Follow-up Step as Done",
+    followUpConfirmedMsg: "Follow-up step marked as done.",
+    followUpCompletedOn: "Marked done on",
+    followUpMarkIncomplete: "Mark as incomplete",
+    followUpStatusActive: "Active Step",
+    followUpStatusFinal: "Final",
+    passportFollowUpTitle: "Follow-up Status",
+    passportFollowUpStatusLabel: "Status",
+    passportFollowUpStatusDone: "Marked done by user",
+    passportFollowUpDateLabel: "Marked Done On",
+    passportFollowUpDisclaimer:
+      "This reflects a self-reported tracking status only. It does not confirm that treatment, follow-up care, or medical clearance has taken place.",
   },
 
   hi: {
@@ -581,6 +595,20 @@ const strings = {
     passportLabInterpretationLabel: "व्याख्या",
     passportLabExplanationLabel: "संक्षिप्त विवरण",
     passportLabDateLabel: "जांच की तिथि",
+
+    /* Follow-up Done (Step 4) */
+    followUpDoneBtn: "फॉलो-अप चरण को पूर्ण चिह्नित करें",
+    followUpConfirmedMsg: "फॉलो-अप चरण पूर्ण के रूप में चिह्नित किया गया।",
+    followUpCompletedOn: "इस तिथि को पूर्ण चिह्नित किया गया",
+    followUpMarkIncomplete: "अपूर्ण के रूप में चिह्नित करें",
+    followUpStatusActive: "सक्रिय चरण",
+    followUpStatusFinal: "अंतिम",
+    passportFollowUpTitle: "फॉलो-अप स्थिति",
+    passportFollowUpStatusLabel: "स्थिति",
+    passportFollowUpStatusDone: "उपयोगकर्ता द्वारा पूर्ण चिह्नित",
+    passportFollowUpDateLabel: "पूर्ण चिह्नित करने की तिथि",
+    passportFollowUpDisclaimer:
+      "यह केवल एक स्व-रिपोर्ट की गई ट्रैकिंग स्थिति दर्शाता है। यह इलाज, फॉलो-अप देखभाल, या चिकित्सीय स्वीकृति की पुष्टि नहीं करता।",
   },
 };
 
