@@ -1,4 +1,4 @@
-# 🩺 SugarGuard CareBridge
+# SugarGuard CareBridge
 
 > An explainable diabetes screening-to-care navigation platform that helps users understand a screening result, prepare for confirmatory testing, organize lab results, and track their care journey through follow-up.
 
@@ -13,7 +13,7 @@
 
 ---
 
-## 📖 About the Project
+## About the Project
 
 Many people receive a diabetes screening result but are unsure about what the result means or what they should do next.
 
@@ -31,7 +31,7 @@ SugarGuard CareBridge is a **screening and care-navigation tool, not a diagnosti
 
 ---
 
-## 🚨 Problem Statement
+## Problem Statement
 
 Diabetes screening can identify people who may need further evaluation, but receiving a screening indication does not automatically provide a clear path toward confirmation and follow-up.
 
@@ -60,7 +60,7 @@ Follow-up
 
 ---
 
-## 💡 Our Solution
+## Our Solution
 
 SugarGuard CareBridge combines screening, explanation, confirmation guidance, laboratory result interpretation, and care tracking into one workflow.
 
@@ -69,24 +69,24 @@ SugarGuard CareBridge combines screening, explanation, confirmation guidance, la
 │             SUGARGUARD CAREBRIDGE            │
 ├─────────────────────────────────────────────┤
 │                                               │
-│  📝 Health Screening                         │
-│  🧠 Explainable Risk Result                  │
-│  🛡️ Reliability Gate                         │
-│  🧪 Confirmation Guidance                    │
-│  📄 Lab Report Checker                       │
-│  🔍 OCR-based Report Extraction              │
-│  📋 Care Passport                            │
-│  🔄 Care Journey Tracking                    │
-│  ✅ Follow-up Tracking                       │
+│  Health Screening                            │
+│  Explainable Risk Result                     │
+│  Reliability Gate                            │
+│  Confirmation Guidance                       │
+│  Lab Report Checker                          │
+│  OCR-based Report Extraction                 │
+│  Care Passport                               │
+│  Care Journey Tracking                       │
+│  Follow-up Tracking                          │
 │                                               │
 └─────────────────────────────────────────────┘
 ```
 
 ---
 
-## ✨ Key Features
+## Key Features
 
-### 📝 1. Diabetes Screening
+### 1. Diabetes Screening
 
 Users provide a small set of health-related inputs:
 
@@ -104,7 +104,7 @@ Height and weight are used to calculate BMI.
 
 The system converts the entered age into the corresponding CDC-style age category used by the underlying model.
 
-### 🧠 2. Explainable Screening Model
+### 2. Explainable Screening Model
 
 The screening model uses Logistic Regression trained on the CDC BRFSS 2015 Diabetes Health Indicators dataset.
 
@@ -129,7 +129,7 @@ Lower screening risk
 
 The result is intentionally presented as a screening indication rather than a diagnosis.
 
-### 🔍 3. Explainable Top Factors
+### 3. Explainable Top Factors
 
 Instead of returning only a prediction, the system identifies the major model signals contributing to the result.
 
@@ -146,7 +146,7 @@ The factors are calculated using the trained Logistic Regression coefficients an
 
 This makes the screening result more understandable than a simple binary prediction.
 
-### 🛡️ 4. Reliability Gate
+### 4. Reliability Gate
 
 Before running the model, the backend validates the submitted information.
 
@@ -172,7 +172,7 @@ This prevents unsuitable or incomplete inputs from being blindly passed to the m
 
 If a user indicates that they are already diagnosed with diabetes, the screening workflow exits rather than treating the screening model as a diagnostic tool.
 
-### 🧪 5. Confirmation Guidance
+### 5. Confirmation Guidance
 
 After receiving a screening indication, users are guided toward the next appropriate step.
 
@@ -186,7 +186,7 @@ Example guidance:
 
 The application does not recommend medication or treatment changes.
 
-### 📄 6. Care Passport
+### 6. Care Passport
 
 The Care Passport organizes important information from the screening journey into one structured summary.
 
@@ -204,7 +204,7 @@ It can include:
 
 The Care Passport can also be printed/downloaded for discussion during a healthcare visit.
 
-### 🧪 7. Lab Report Checker
+### 7. Lab Report Checker
 
 Users can manually enter laboratory values or extract them from a report.
 
@@ -230,7 +230,7 @@ The system does not tell the user that they have diabetes.
 
 Laboratory results are presented as reference-range interpretations and should be discussed with a healthcare professional.
 
-### 🔍 8. OCR-based Report Extraction
+### 8. OCR-based Report Extraction
 
 SugarGuard CareBridge also supports image-based laboratory report extraction using Tesseract.js.
 
@@ -254,7 +254,7 @@ OCR is performed client-side.
 
 The OCR layer is used for extraction only. It does not diagnose the user or modify the machine-learning model.
 
-### 📊 9. Laboratory Reference Ranges
+### 9. Laboratory Reference Ranges
 
 The application maintains laboratory interpretation rules in a dedicated utility:
 
@@ -283,7 +283,7 @@ Random glucose is handled differently because the value alone does not establish
 
 A value of 200 mg/dL or higher is flagged for prompt clinical evaluation, with diagnostic interpretation requiring appropriate clinical context.
 
-### 🔄 10. Care Journey Tracking
+### 10. Care Journey Tracking
 
 The platform tracks the user's progress through four stages:
 
@@ -311,7 +311,7 @@ The follow-up status is self-reported tracking and does not represent medical cl
 
 ---
 
-## 🏗️ System Architecture
+## System Architecture
 
 ```
                     ┌───────────────────┐
@@ -353,7 +353,7 @@ The follow-up status is self-reported tracking and does not represent medical cl
 
 ---
 
-## ☁️ AWS Architecture
+## AWS Architecture
 
 The application is designed for deployment using AWS serverless infrastructure.
 
@@ -371,7 +371,7 @@ Hosts and serves the React/Vite frontend as the public web application.
 
 ---
 
-## 🛠️ Technology Stack
+## Technology Stack
 
 **Frontend**
 - React.js
@@ -401,7 +401,7 @@ Hosts and serves the React/Vite frontend as the public web application.
 
 ---
 
-## 📊 Dataset
+## Dataset
 
 The screening model is trained using the:
 
@@ -418,7 +418,7 @@ The project uses a reduced eight-field feature set to make the model practical f
 
 ---
 
-## 🤖 Model Performance
+## Model Performance
 
 The eight-field Logistic Regression model was evaluated using a stratified train/test split.
 
@@ -436,7 +436,7 @@ The performance metrics represent evaluation on the project's dataset split and 
 
 ---
 
-## 🔬 Model Features
+## Model Features
 
 The final model uses:
 
@@ -464,7 +464,7 @@ The application exposes the top contributing model signals to improve interpreta
 
 ---
 
-## 📂 Project Structure
+## Project Structure
 
 ```
 SugarGuard-CareBridge/
@@ -512,7 +512,7 @@ SugarGuard-CareBridge/
 
 ---
 
-## 🚀 Getting Started
+## Getting Started
 
 ### Prerequisites
 
@@ -530,7 +530,7 @@ git clone https://github.com/ikhushichauhan/SugarGuard-CareBridge.git
 cd SugarGuard-CareBridge
 ```
 
-### 🐳 Run the Backend Locally
+### Run the Backend Locally
 
 Navigate to the backend directory:
 
@@ -552,7 +552,7 @@ docker run --rm -p 9000:8080 sugarguard-backend
 
 The local Lambda Runtime Interface Emulator endpoint can then be used for testing.
 
-### ⚛️ Run the Frontend Locally
+### Run the Frontend Locally
 
 Open another terminal:
 
@@ -574,7 +574,7 @@ npm run dev
 
 The application will be available at the local Vite development URL.
 
-### 🔗 Local Development Flow
+### Local Development Flow
 
 During local development:
 
@@ -596,7 +596,7 @@ This allows the frontend and containerized backend to be tested together before 
 
 ---
 
-## 🧪 Testing
+## Testing
 
 The project includes backend and OCR-related tests.
 
@@ -616,7 +616,7 @@ OCR extraction and laboratory boundary tests are included in the frontend testin
 
 ---
 
-## 🔐 Safety & Scope
+## Safety & Scope
 
 SugarGuard CareBridge is intentionally designed with clear boundaries.
 
@@ -643,7 +643,7 @@ SugarGuard CareBridge is intentionally designed with clear boundaries.
 
 ---
 
-## 🎯 Design Principles
+## Design Principles
 
 **1. Explainability**
 Users should understand why a screening result was produced rather than receiving only a number.
@@ -665,7 +665,7 @@ without requiring unnecessary complexity.
 
 ---
 
-## 🔮 Future Scope
+## Future Scope
 
 Potential future improvements include:
 
@@ -685,7 +685,7 @@ These features are outside the current MVP scope.
 
 ---
 
-## 🌱 Impact
+## Impact
 
 SugarGuard CareBridge focuses on a specific gap in the diabetes screening journey:
 
@@ -711,7 +711,7 @@ The goal is to make the journey from screening to confirmation and follow-up cle
 
 ---
 
-## 👩‍💻 Team
+## Team
 
 **Khushi Chauhan**
 Project Lead & Developer
@@ -734,13 +734,13 @@ Contributions include:
 
 ---
 
-## 📄 License
+## License
 
 This project is developed as a hackathon project for educational and demonstration purposes.
 
 ---
 
-## ⭐ Acknowledgements
+## Acknowledgements
 
 The project builds upon publicly available diabetes health indicator data and open-source technologies including:
 
@@ -754,5 +754,5 @@ The project builds upon publicly available diabetes health indicator data and op
 
 ---
 
-**🩺 SugarGuard CareBridge**
+**SugarGuard CareBridge**
 *From Screening to the Next Step.*
