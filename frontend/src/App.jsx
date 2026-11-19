@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import strings from "./i18n/strings";
 import { submitScreening } from "./api/screeningApi";
@@ -14,6 +15,39 @@ import ErrorBanner from "./components/ErrorBanner";
 
 import "./App.css";
 
+const LAB_RESULTS_KEY = "sg_lab_results";
+const LEGACY_LAB_RESULT_KEY = "sg_lab_result";
+
+function loadLabResults() {
+  try {
+    const saved = localStorage.getItem(LAB_RESULTS_KEY);
+
+    if (saved) {
+      const parsed = JSON.parse(saved);
+      if (Array.isArray(parsed)) return parsed;
+    }
+
+    // Migrate the previous single-report format.
+    const legacy = localStorage.getItem(LEGACY_LAB_RESULT_KEY);
+
+    if (legacy) {
+      const parsedLegacy = JSON.parse(legacy);
+
+      if (parsedLegacy && typeof parsedLegacy === "object") {
+        return [{
+          ...parsedLegacy,
+          id: parsedLegacy.id || `legacy-${Date.now()}`,
+          dateISO: parsedLegacy.dateISO || null,
+        }];
+      }
+    }
+  } catch {
+    // Invalid or unavailable localStorage should not crash the app.
+  }
+
+  return [];
+}
+
 export default function App() {
   const [lang, setLang] = useState(() => {
     try {
@@ -23,16 +57,18 @@ export default function App() {
     }
   });
 
-  // Views: "landing" | "screening" | "impact" | "processing" | "result" | "journey" | "labChecker"
   const [currentView, setCurrentView] = useState(() => {
     try {
       const savedView = localStorage.getItem("sg_current_view");
       const savedResponse = localStorage.getItem("sg_screening_response");
-      const savedLab = localStorage.getItem("sg_lab_result");
+      const savedLab = localStorage.getItem(LAB_RESULTS_KEY)
+        || localStorage.getItem(LEGACY_LAB_RESULT_KEY);
 
       if (!savedView || savedView === "processing") return "landing";
       if (savedView === "result" && !savedResponse) return "landing";
-      if (savedView === "journey" && !savedResponse && !savedLab) return "landing";
+      if (savedView === "journey" && !savedResponse && !savedLab) {
+        return "landing";
+      }
 
       return savedView;
     } catch {
@@ -51,16 +87,13 @@ export default function App() {
     }
   });
 
-  const [labResult, setLabResult] = useState(() => {
-    try {
-      const saved = localStorage.getItem("sg_lab_result");
-      return saved ? JSON.parse(saved) : null;
-    } catch {
-      return null;
-    }
-  });
+  const [labResults, setLabResults] = useState(loadLabResults);
 
-  const [error, setError] = useState(null); // { title, message }
+  const latestLabResult = labResults.length
+    ? labResults[labResults.length - 1]
+    : null;
+
+  const [error, setError] = useState(null);
   const [screeningResetKey, setScreeningResetKey] = useState(0);
 
   const t = strings[lang];
@@ -69,12 +102,11 @@ export default function App() {
     setLang((prev) => (prev === "en" ? "hi" : "en"));
   };
 
-  // Sync state changes with localStorage
   useEffect(() => {
     try {
       localStorage.setItem("sg_lang", lang);
     } catch {
-      /* ignore */
+      // Ignore storage errors.
     }
   }, [lang]);
 
@@ -82,47 +114,56 @@ export default function App() {
     try {
       localStorage.setItem("sg_current_view", currentView);
     } catch {
-      /* ignore */
+      // Ignore storage errors.
     }
   }, [currentView]);
 
   useEffect(() => {
     try {
       if (response) {
-        localStorage.setItem("sg_screening_response", JSON.stringify(response));
+        localStorage.setItem(
+          "sg_screening_response",
+          JSON.stringify(response)
+        );
       } else {
         localStorage.removeItem("sg_screening_response");
       }
     } catch {
-      /* ignore */
+      // Ignore storage errors.
     }
   }, [response]);
 
   useEffect(() => {
     try {
-      if (labResult) {
-        localStorage.setItem("sg_lab_result", JSON.stringify(labResult));
+      localStorage.setItem(
+        LAB_RESULTS_KEY,
+        JSON.stringify(labResults)
+      );
+
+      // Keep legacy key updated for compatibility with older app code.
+      if (latestLabResult) {
+        localStorage.setItem(
+          LEGACY_LAB_RESULT_KEY,
+          JSON.stringify(latestLabResult)
+        );
       } else {
-        localStorage.removeItem("sg_lab_result");
+        localStorage.removeItem(LEGACY_LAB_RESULT_KEY);
       }
     } catch {
-      /* ignore */
+      // Ignore storage errors.
     }
-  }, [labResult]);
+  }, [labResults, latestLabResult]);
 
-  // Scroll to top on view change
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, [currentView]);
 
-  // Smooth Scroll Reveal Observer
   useEffect(() => {
     const observerCallback = (entries) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
           entry.target.classList.add("sg-revealed");
         } else if (entry.boundingClientRect.top > 0) {
-          // Gracefully fade out when scrolling back up past element
           entry.target.classList.remove("sg-revealed");
         }
       });
@@ -133,10 +174,21 @@ export default function App() {
       rootMargin: "0px 0px -40px 0px",
     });
 
-    const selector = ".sg-scroll-reveal, .sg-how-card-dark, .sg-value-item-dark, .sg-what-card-dark, .sg-lc-form-card, .sg-lc-ocr-card, .sg-trust-strip-dark, .sg-final-cta-box-dark, .sg-impact-grid-card";
-    const targets = document.querySelectorAll(selector);
+    const selector = [
+      ".sg-scroll-reveal",
+      ".sg-how-card-dark",
+      ".sg-value-item-dark",
+      ".sg-what-card-dark",
+      ".sg-lc-form-card",
+      ".sg-lc-ocr-card",
+      ".sg-trust-strip-dark",
+      ".sg-final-cta-box-dark",
+      ".sg-impact-grid-card",
+    ].join(", ");
 
-    targets.forEach((target) => observer.observe(target));
+    document.querySelectorAll(selector).forEach((target) => {
+      observer.observe(target);
+    });
 
     return () => observer.disconnect();
   }, [currentView]);
@@ -156,10 +208,12 @@ export default function App() {
       setCurrentView("landing");
       return;
     }
+
     if (sectionId === "start-screening") {
       handleStartScreening();
       return;
     }
+
     if (sectionId === "impact") {
       setCurrentView("impact");
       return;
@@ -173,13 +227,16 @@ export default function App() {
 
     if (currentView !== "landing") {
       setCurrentView("landing");
+
       setTimeout(() => {
-        const el = document.getElementById(sectionId);
-        if (el) el.scrollIntoView({ behavior: "smooth" });
+        document.getElementById(sectionId)?.scrollIntoView({
+          behavior: "smooth",
+        });
       }, 100);
     } else {
-      const el = document.getElementById(sectionId);
-      if (el) el.scrollIntoView({ behavior: "smooth" });
+      document.getElementById(sectionId)?.scrollIntoView({
+        behavior: "smooth",
+      });
     }
   };
 
@@ -195,13 +252,19 @@ export default function App() {
       ]);
 
       if (!data || !data.status) {
-        setError({ title: t.blockTitle, message: t.unexpectedError });
+        setError({
+          title: t.blockTitle,
+          message: t.unexpectedError,
+        });
         setCurrentView("screening");
         return;
       }
 
       if (data.status === "BLOCK") {
-        setError({ title: t.blockTitle, message: data.message || t.serverError });
+        setError({
+          title: t.blockTitle,
+          message: data.message || t.serverError,
+        });
         setCurrentView("screening");
         return;
       }
@@ -216,15 +279,20 @@ export default function App() {
         setResponse(data);
         setCurrentView("result");
       } else {
-        setError({ title: t.blockTitle, message: t.unexpectedError });
+        setError({
+          title: t.blockTitle,
+          message: t.unexpectedError,
+        });
         setCurrentView("screening");
       }
     } catch (err) {
-      if (err.message === "Failed to fetch") {
-        setError({ title: t.blockTitle, message: t.networkError });
-      } else {
-        setError({ title: t.blockTitle, message: t.serverError });
-      }
+      setError({
+        title: t.blockTitle,
+        message:
+          err.message === "Failed to fetch"
+            ? t.networkError
+            : t.serverError,
+      });
       setCurrentView("screening");
     } finally {
       setLoading(false);
@@ -242,18 +310,35 @@ export default function App() {
   const handleNewScreening = () => {
     setResponse(null);
     setError(null);
+
     try {
       localStorage.removeItem("sg_screening_response");
       localStorage.removeItem("sg_screening_form");
     } catch {
-      /* ignore */
+      // Ignore storage errors.
     }
+
     setScreeningResetKey((prev) => prev + 1);
     setCurrentView("screening");
   };
 
   const handleAddLabResultToPassport = (labData) => {
-    setLabResult(labData);
+    const report = {
+      ...labData,
+      id: labData.id || `lab-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+    };
+
+    setLabResults((previous) => {
+      // Avoid adding the same report twice if the callback is triggered again.
+      if (previous.some((item) => item.id === report.id)) {
+        return previous;
+      }
+
+      return [...previous, report].sort((a, b) => {
+        return (a.dateISO || "").localeCompare(b.dateISO || "");
+      });
+    });
+
     setCurrentView("journey");
   };
 
@@ -261,7 +346,6 @@ export default function App() {
 
   return (
     <div className="sg-app">
-      {/* ── Global Navbar ── */}
       <Navbar
         lang={lang}
         onToggleLang={toggleLang}
@@ -269,7 +353,6 @@ export default function App() {
         theme={isDarkNav ? "dark" : "light"}
       />
 
-      {/* ── Error Banner if present ── */}
       {error && (
         <div className="sg-global-error-wrap">
           <ErrorBanner
@@ -281,7 +364,6 @@ export default function App() {
         </div>
       )}
 
-      {/* ── Dynamic Page Views ── */}
       {currentView === "landing" && (
         <LandingPage
           lang={lang}
@@ -319,10 +401,11 @@ export default function App() {
         />
       )}
 
-      {currentView === "journey" && (response || labResult) && (
+      {currentView === "journey" && (response || labResults.length > 0) && (
         <CareJourneyPage
           result={response?.result}
-          labResult={labResult}
+          labResult={latestLabResult}
+          labResults={labResults}
           lang={lang}
           onBackToResult={handleBackToResult}
           onBackToHome={handleBackToLanding}
@@ -332,6 +415,7 @@ export default function App() {
       {currentView === "labChecker" && (
         <LabReportPage
           lang={lang}
+          labResults={labResults}
           onBackToHome={handleBackToLanding}
           onAddToCarePassport={handleAddLabResultToPassport}
         />

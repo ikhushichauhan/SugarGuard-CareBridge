@@ -1,115 +1,134 @@
+
 /* global process */
-import { extractLabCandidates } from "./ocrTestMapper.js";
-import { LAB_TEST_IDS } from "./labRanges.js";
 
-// Helper assertions
-function assertEqual(actual, expected, message) {
-  if (actual !== expected) {
-    throw new Error(`FAIL: ${message}\n  Expected: ${JSON.stringify(expected)}\n  Actual:   ${JSON.stringify(actual)}`);
+import { extractLabCandidates, OCR_TEST_IDS } from "./ocrTestMapper.js";
+
+function assert(condition, message) {
+  if (!condition) {
+    throw new Error(`FAIL: ${message}`);
   }
 }
 
-function runTests() {
-  console.log("Running ocrTestMapper tests...\n");
-  let passed = 0;
-  let failed = 0;
-
-  function test(description, fn) {
-    try {
-      fn();
-      console.log(`✓ PASS: ${description}`);
-      passed++;
-    } catch (err) {
-      console.error(`✗ FAIL: ${description}`);
-      console.error(`  ${err.message}`);
-      failed++;
-    }
-  }
-
-  // 1. User's sample report test case
-  test("Sample report with HbA1c, 2-Hour OGTT, FPG, and RBG", () => {
-    const rawText = `
-PATIENT LABORATORY REPORT
-Fasting Blood Glucose: 110 mg/dL
-2-Hour OGTT: 178 mg/dL
-HbA1c: 6.8%
-Random Blood Sugar: 145 mg/dL
-    `;
-
-    const { matches } = extractLabCandidates(rawText);
-    assertEqual(matches.length, 4, "Should extract 4 candidate matches");
-
-    const fpg = matches.find((m) => m.testId === LAB_TEST_IDS.FPG);
-    assertEqual(fpg?.value, 110, "FPG value should be 110");
-    assertEqual(fpg?.unit, "mg/dL", "FPG unit should be mg/dL");
-
-    const ogtt = matches.find((m) => m.testId === LAB_TEST_IDS.OGTT);
-    assertEqual(ogtt?.value, 178, "OGTT value should be 178");
-    assertEqual(ogtt?.unit, "mg/dL", "OGTT unit should be mg/dL");
-
-    const hba1c = matches.find((m) => m.testId === LAB_TEST_IDS.HBA1C);
-    assertEqual(hba1c?.value, 6.8, "HbA1c value should be 6.8");
-    assertEqual(hba1c?.unit, "%", "HbA1c unit should be %");
-
-    const rbg = matches.find((m) => m.testId === LAB_TEST_IDS.RBG);
-    assertEqual(rbg?.value, 145, "RBG value should be 145");
-    assertEqual(rbg?.unit, "mg/dL", "RBG unit should be mg/dL");
-  });
-
-  // 2. Concatenated OCR misreads (e.g. HbA1c1, HbAlc)
-  test("OCR text with concatenated misreads (HbA1c1 6.8%, 2-Hour OGTT 178mg/dL)", () => {
-    const rawText = `
-HbA1c1 6.8%
-2-Hour OGTT 178 mg/dL
-    `;
-
-    const { matches } = extractLabCandidates(rawText);
-    const hba1c = matches.find((m) => m.testId === LAB_TEST_IDS.HBA1C);
-    assertEqual(hba1c?.value, 6.8, "HbA1c1 value should be extracted as 6.8");
-
-    const ogtt = matches.find((m) => m.testId === LAB_TEST_IDS.OGTT);
-    assertEqual(ogtt?.value, 178, "2-Hour OGTT value should be extracted as 178");
-  });
-
-  // 3. Alternate test name variations
-  test("Alternate test name variants (HbAlc, FBS, RBS, 2 hr post glucose)", () => {
-    const rawText = `
-HbAlc : 7.2 %
-FBS - 105 mg/dl
-RBS 160 mg/dL
-2 hr post glucose: 185 mg/dL
-    `;
-
-    const { matches } = extractLabCandidates(rawText);
-    const hba1c = matches.find((m) => m.testId === LAB_TEST_IDS.HBA1C);
-    assertEqual(hba1c?.value, 7.2, "HbAlc variant value should be 7.2");
-
-    const fpg = matches.find((m) => m.testId === LAB_TEST_IDS.FPG);
-    assertEqual(fpg?.value, 105, "FBS variant value should be 105");
-
-    const rbg = matches.find((m) => m.testId === LAB_TEST_IDS.RBG);
-    assertEqual(rbg?.value, 160, "RBS variant value should be 160");
-
-    const ogtt = matches.find((m) => m.testId === LAB_TEST_IDS.OGTT);
-    assertEqual(ogtt?.value, 185, "2 hr post glucose variant value should be 185");
-  });
-
-  // 4. Multi-line column layout
-  test("Multi-line column layout where value is on next line", () => {
-    const rawText = `
-Fasting Blood Sugar
-115 mg/dL
-    `;
-
-    const { matches } = extractLabCandidates(rawText);
-    const fpg = matches.find((m) => m.testId === LAB_TEST_IDS.FPG);
-    assertEqual(fpg?.value, 115, "Multi-line FPG value should be 115");
-  });
-
-  console.log(`\nTest Summary: ${passed} passed, ${failed} failed.`);
-  if (failed > 0) {
-    process.exit(1);
+function test(name, fn) {
+  try {
+    fn();
+    console.log(`✓ ${name}`);
+  } catch (error) {
+    console.error(`✗ ${name}: ${error.message}`);
+    process.exitCode = 1;
   }
 }
 
-runTests();
+test("Reads mg/dL from report instead of hardcoding", () => {
+  const matches = extractLabCandidates(
+    "Fasting Blood Glucose: 110 mg/dL"
+  );
+
+  assert(matches[0].unit === "mg/dL", "Unit should be mg/dL");
+  assert(
+    matches[0].needsManualReview === false,
+    "Should not require review"
+  );
+});
+
+test("Converts mmol/L glucose to mg/dL", () => {
+  const matches = extractLabCandidates(
+    "Fasting Glucose: 7 mmol/L"
+  );
+
+  assert(
+    Math.abs(matches[0].value - 126.1) < 0.2,
+    "7 mmol/L should convert to about 126.1 mg/dL"
+  );
+
+  assert(
+    matches[0].convertedFrom === "mmol/L",
+    "Conversion source should be shown"
+  );
+});
+
+test("Skips reference range and extracts actual result", () => {
+  const matches = extractLabCandidates(
+    "Fasting Glucose (70 - 100): 126 mg/dL"
+  );
+
+  assert(
+    matches[0].value === 126,
+    "Should extract 126, not 70 or 100"
+  );
+});
+
+test("HbA1c outside 3-15 requires manual verification", () => {
+  const matches = extractLabCandidates("HbA1c: 16%");
+
+  assert(
+    matches[0].needsManualReview === true,
+    "16% should require review"
+  );
+});
+
+test("HbA1c within supported range is accepted for review", () => {
+  const matches = extractLabCandidates("HbA1c: 6.5%");
+
+  assert(
+    matches[0].needsManualReview === false,
+    "6.5% should pass range validation"
+  );
+});
+
+test("Glucose outside 20-800 requires manual verification", () => {
+  const matches = extractLabCandidates(
+    "Random Blood Glucose: 900 mg/dL"
+  );
+
+  assert(
+    matches[0].needsManualReview === true,
+    "900 should require review"
+  );
+});
+
+test("PPBS is not mapped to OGTT", () => {
+  const matches = extractLabCandidates(
+    "Post Prandial Blood Sugar: 210 mg/dL"
+  );
+
+  assert(
+    matches[0].testId === OCR_TEST_IDS.PPBS,
+    "Should have PPBS test id"
+  );
+
+  assert(
+    matches[0].testId !== OCR_TEST_IDS.OGTT,
+    "Must not be OGTT"
+  );
+});
+
+test("Missing unit requires manual review", () => {
+  const matches = extractLabCandidates(
+    "Fasting Blood Sugar: 126"
+  );
+
+  assert(
+    matches[0].unit === null,
+    "Unit should remain unknown"
+  );
+
+  assert(
+    matches[0].needsManualReview === true,
+    "Missing unit must require review"
+  );
+});
+
+test("Does not interpret HbA1c as glucose", () => {
+  const matches = extractLabCandidates("HbA1c: 6.8%");
+
+  assert(
+    matches[0].unit === "%",
+    "HbA1c unit must remain percent"
+  );
+
+  assert(
+    matches[0].value === 6.8,
+    "HbA1c value should remain unchanged"
+  );
+});
