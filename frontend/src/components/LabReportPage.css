@@ -583,3 +583,64 @@
   border-radius: 20px;
   margin-bottom: 1rem;
 }
+
+
+/* Manual verification and report-date additions */
+
+.sg-lc-review-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+  padding: 1.2rem;
+  border: 1px solid rgba(245, 158, 11, 0.35);
+  border-radius: 10px;
+  background: rgba(120, 53, 15, 0.14);
+  color: #e2e8f0;
+  line-height: 1.6;
+}
+
+.sg-lc-review-panel p {
+  margin: 0;
+}
+
+.sg-lc-original-value {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  padding: 0.85rem;
+  border-radius: 8px;
+  background: rgba(15, 23, 42, 0.65);
+  overflow-wrap: anywhere;
+}
+
+.sg-lc-verify-check {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.7rem;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.sg-lc-verify-check input {
+  margin-top: 0.25rem;
+  accent-color: #3b82f6;
+  flex-shrink: 0;
+}
+
+.sg-lc-review-flag {
+  display: inline-block;
+  margin-left: 0.4rem;
+  color: #fbbf24;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.sg-lc-add-passport-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.sg-lc-field input[type="date"] {
+  color-scheme: dark;
+}

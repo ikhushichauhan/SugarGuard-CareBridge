@@ -1,128 +1,170 @@
-// ═══════════════════════════════════════════════════════════════════════
-// SugarGuard CareBridge — Manual Lab Report Checker: reference-range logic
-// ═══════════════════════════════════════════════════════════════════════
-//
-// Reference ranges (non-pregnant adults):
-//   HbA1c              < 5.7%        Normal
-//                       5.7 – 6.4%   Prediabetes range
-//                       ≥ 6.5%       Diabetes range
-//
-//   Fasting Glucose     < 100 mg/dL  Normal
-//                       100 – 125    Prediabetes range
-//                       ≥ 126 mg/dL  Diabetes range
-//
-//   2-hour OGTT         < 140 mg/dL  Normal
-//                       140 – 199    Prediabetes range
-//                       ≥ 200 mg/dL  Diabetes range
-//
-//   Random Glucose      < 200 mg/dL  Not diagnostic on its own
-//                       ≥ 200 mg/dL  Diagnostic-range flag (with symptoms)
-//
-// IMPORTANT: This module classifies a single numeric value against
-// published reference ranges. It never diagnoses anyone and never returns
-// wording like "you have diabetes" — see the `category` / `tone` values
-// below and how the UI renders them. All human-readable copy lives in
-// src/i18n/strings.js; this file only returns i18n *keys*, not text, so
-// it has zero React/i18n dependencies and can be unit-tested directly.
 
 export const LAB_TEST_IDS = {
   HBA1C: "hba1c",
   FPG: "fpg",
   RBG: "rbg",
   OGTT: "ogtt",
+  PPBS: "ppbs",
 };
 
-// Categories a classification can resolve to. Intentionally does NOT
-// include anything like "diabetic" / "has diabetes" — these are range
-// labels, not diagnoses.
 export const LAB_CATEGORY = {
   NORMAL: "normal",
   PREDIABETES: "prediabetes",
-  DIABETES_RANGE: "diabetes-range",
-  RBG_BELOW_THRESHOLD: "rbg-below-threshold",
-  RBG_DIAGNOSTIC_FLAG: "rbg-diagnostic-flag",
+  DIABETES_RANGE: "diabetes_range",
+  NON_DIAGNOSTIC: "non_diagnostic",
+  MANUAL_REVIEW: "manual_review",
 };
 
-/**
- * Classify a value against a standard three-band range (used by HbA1c,
- * Fasting Glucose, and OGTT). Boundaries are inclusive on the lower end
- * of each band: a value exactly equal to `prediabetesFrom` or
- * `diabetesFrom` falls into the higher band, matching how the published
- * ranges are written (e.g. "100–125 mg/dL" prediabetes, "≥126" diabetes).
- */
-function classifyThreeBand(value, prediabetesFrom, diabetesFrom) {
-  if (value < prediabetesFrom) {
-    return {
+const LAB_RANGES = {
+  [LAB_TEST_IDS.HBA1C]: {
+    name: "HbA1c",
+    unit: "%",
+    thresholds: {
+      normal: 5.7,
+      prediabetes: 6.5,
+    },
+  },
+
+  [LAB_TEST_IDS.FPG]: {
+    name: "Fasting Plasma Glucose",
+    unit: "mg/dL",
+    thresholds: {
+      normal: 100,
+      prediabetes: 126,
+    },
+  },
+
+  [LAB_TEST_IDS.OGTT]: {
+    name: "Oral Glucose Tolerance Test",
+    unit: "mg/dL",
+    thresholds: {
+      normal: 140,
+      prediabetes: 200,
+    },
+  },
+};
+
+const isValidNumber = (value) => {
+  if (value === null || value === undefined || value === "") {
+    return false;
+  }
+
+  const parsedValue = Number(value);
+
+  return Number.isFinite(parsedValue) && parsedValue > 0;
+};
+
+const createResult = ({
+  testId,
+  value,
+  category,
+  label,
+  message,
+  unit,
+}) => ({
+  testId,
+  testName: LAB_RANGES[testId]?.name || testId.toUpperCase(),
+  value,
+  unit,
+  category,
+  label,
+  message,
+});
+
+export const interpretLabValue = (testId, inputValue) => {
+  // Unknown test ID
+  if (!Object.values(LAB_TEST_IDS).includes(testId)) {
+    return null;
+  }
+
+  // Invalid or missing value
+  if (!isValidNumber(inputValue)) {
+    return null;
+  }
+
+  const value = Number(inputValue);
+
+  // PPBS is not equivalent to OGTT.
+  // It requires manual clinical review.
+  if (testId === LAB_TEST_IDS.PPBS) {
+    return createResult({
+      testId,
+      value,
+      unit: "mg/dL",
+      category: LAB_CATEGORY.MANUAL_REVIEW,
+      label: "Manual review required",
+      message:
+        "PPBS should not be interpreted using OGTT thresholds. A healthcare professional must review this result in its clinical context.",
+    });
+  }
+
+  // Random Blood Glucose is not diagnostic on its own.
+  if (testId === LAB_TEST_IDS.RBG) {
+    if (value >= 200) {
+      return createResult({
+        testId,
+        value,
+        unit: "mg/dL",
+        category: LAB_CATEGORY.NON_DIAGNOSTIC,
+        label: "Clinical evaluation recommended",
+        message:
+          "Random blood glucose is 200 mg/dL or higher. This may require prompt clinical evaluation, especially when symptoms are present. This result alone does not confirm diabetes.",
+      });
+    }
+
+    return createResult({
+      testId,
+      value,
+      unit: "mg/dL",
+      category: LAB_CATEGORY.NON_DIAGNOSTIC,
+      label: "Non-diagnostic result",
+      message:
+        "Random blood glucose cannot be used alone to confirm or rule out diabetes. A healthcare professional may recommend appropriate follow-up testing.",
+    });
+  }
+
+  const range = LAB_RANGES[testId];
+
+  if (!range) {
+    return null;
+  }
+
+  const { normal, prediabetes } = range.thresholds;
+
+  // Normal range
+  if (value < normal) {
+    return createResult({
+      testId,
+      value,
+      unit: range.unit,
       category: LAB_CATEGORY.NORMAL,
-      tone: "normal",
-      labelKey: "labCategoryNormalLabel",
-      descKey: "labCategoryNormalDesc",
-    };
+      label: "Within normal range",
+      message:
+        "This value is below the threshold commonly used for the diabetes risk categories. Discuss your result with a healthcare professional.",
+    });
   }
-  if (value < diabetesFrom) {
-    return {
+
+  // Prediabetes range
+  if (value < prediabetes) {
+    return createResult({
+      testId,
+      value,
+      unit: range.unit,
       category: LAB_CATEGORY.PREDIABETES,
-      tone: "warning",
-      labelKey: "labCategoryPrediabetesLabel",
-      descKey: "labCategoryPrediabetesDesc",
-    };
+      label: "Prediabetes range",
+      message:
+        "This value falls in the commonly used prediabetes range. Consult a healthcare professional for assessment and follow-up.",
+    });
   }
-  return {
+
+  // Diabetes range
+  return createResult({
+    testId,
+    value,
+    unit: range.unit,
     category: LAB_CATEGORY.DIABETES_RANGE,
-    tone: "alert",
-    labelKey: "labCategoryDiabetesLabel",
-    descKey: "labCategoryDiabetesDesc",
-  };
-}
-
-/**
- * Random Blood Glucose is handled separately: it is only ever
- * diagnostically meaningful at/above 200 mg/dL, and even then only
- * alongside classic symptoms — so it never gets a "Normal" /
- * "Prediabetes" label the way the other three tests do.
- */
-function classifyRandomGlucose(value) {
-  if (value < 200) {
-    return {
-      category: LAB_CATEGORY.RBG_BELOW_THRESHOLD,
-      tone: "info",
-      labelKey: "labRbgBelowLabel",
-      descKey: "labRbgBelowDesc",
-    };
-  }
-  return {
-    category: LAB_CATEGORY.RBG_DIAGNOSTIC_FLAG,
-    tone: "alert",
-    labelKey: "labRbgAboveLabel",
-    descKey: "labRbgAboveDesc",
-  };
-}
-
-/**
- * Interpret a single manually-entered lab value against published
- * reference ranges for non-pregnant adults.
- *
- * @param {string} testId - one of LAB_TEST_IDS values
- * @param {number|string} rawValue - the entered value
- * @returns {{category:string,tone:string,labelKey:string,descKey:string}|null}
- *   Returns null if the test id is unrecognized or the value isn't a
- *   finite number — callers should validate input before calling this,
- *   but this function fails safe rather than throwing.
- */
-export function interpretLabValue(testId, rawValue) {
-  const value = Number(rawValue);
-  if (!Number.isFinite(value)) return null;
-
-  switch (testId) {
-    case LAB_TEST_IDS.HBA1C:
-      return classifyThreeBand(value, 5.7, 6.5);
-    case LAB_TEST_IDS.FPG:
-      return classifyThreeBand(value, 100, 126);
-    case LAB_TEST_IDS.OGTT:
-      return classifyThreeBand(value, 140, 200);
-    case LAB_TEST_IDS.RBG:
-      return classifyRandomGlucose(value);
-    default:
-      return null;
-  }
-}
+    label: "Diabetes range",
+    message:
+      "This value falls in the diabetes range. Doctor confirmation is required; this result alone does not establish a diagnosis.",
+  });
+};

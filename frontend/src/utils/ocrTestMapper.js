@@ -1,138 +1,314 @@
-// ═══════════════════════════════════════════════════════════════════════
-// SugarGuard CareBridge — OCR Test Mapper (extraction only)
-// ═══════════════════════════════════════════════════════════════════════
-//
-// Takes raw OCR text and finds, at most, ONE supported test name + a
-// nearby numeric value + its unit. This module does NOT interpret the
-// value in any way (no "normal"/"prediabetes"/"diabetes" labels) - that
-// stays the exclusive job of `labRanges.js`. This file only answers the
-// question "which of our 4 supported tests does this text mention, and
-// what number/unit is written next to it?"
-//
-// Deliberately conservative: if it isn't confident, it returns null for
-// that field rather than guessing, so the UI can ask the user to review
-// or fill in manually rather than silently populating a wrong value.
 
 import { LAB_TEST_IDS } from "./labRanges.js";
 
-// Each supported test maps to a list of name variants as they commonly
-// appear on Indian lab reports, including common OCR artifact variations.
-const TEST_NAME_PATTERNS = [
+export const OCR_TEST_IDS = Object.freeze({
+  ...LAB_TEST_IDS,
+});
+
+const GLUCOSE_CONVERSION_FACTOR = 18.0182;
+
+// Recognizes supported lab-test names.
+// PPBS is deliberately checked separately from OGTT.
+const TEST_PATTERNS = [
   {
-    // [1lI] tolerates common OCR misreads of "1" as lowercase "l" or
-    // uppercase "I" in "HbA1c", as well as appended OCR trailing digits (e.g. "HbA1c1").
-    id: LAB_TEST_IDS.HBA1C,
+    testId: OCR_TEST_IDS.HBA1C,
+    pattern:
+      /\b(?:hba1c|hb\s*a1c|hemoglobin\s*a1c|glycated\s*hemoglobin|glycosylated\s*hemoglobin)\b/i,
     unit: "%",
-    patterns: [
-      /(?:hb\s*a|hba)[1lI]c[1lI\d]?\b/i,
-      /glycated\s*h(a)?emoglobin/i,
-      /glycohemoglobin/i,
-      /hb\s*a1c/i,
-    ],
   },
   {
-    id: LAB_TEST_IDS.FPG,
+    testId: OCR_TEST_IDS.OGTT,
+    pattern:
+      /\b(?:ogtt|oral\s+glucose\s+tolerance(?:\s+test)?)\b/i,
     unit: "mg/dL",
-    patterns: [
-      /\bfasting\s*(blood\s*)?(glucose|sugar)\b/i,
-      /\bfpg\b/i,
-      /\bfbs\b/i,
-      /glucose\s*\(?\s*fasting\s*\)?/i,
-    ],
   },
   {
-    id: LAB_TEST_IDS.RBG,
+    testId: OCR_TEST_IDS.PPBS,
+    pattern:
+      /\b(?:ppbs|post[\s-]*prandial(?:\s+blood)?(?:\s+sugar| glucose)?|post\s+meal\s+(?:blood\s+)?(?:glucose|sugar))\b/i,
     unit: "mg/dL",
-    patterns: [
-      /\brandom\s*(blood\s*)?(glucose|sugar)\b/i,
-      /\brbs\b/i,
-      /\brbg\b/i,
-      /glucose\s*\(?\s*random\s*\)?/i,
-    ],
   },
   {
-    id: LAB_TEST_IDS.OGTT,
+    testId: OCR_TEST_IDS.FPG,
+    pattern:
+      /\b(?:fpg|fbs|fasting\s+(?:plasma\s+)?(?:blood\s+)?(?:glucose|sugar)|fasting\s+glucose)\b/i,
     unit: "mg/dL",
-    patterns: [
-      /2[\s-]*(hour|hr)[s]?\s*(ogtt|oral\s*glucose\s*tolerance|post\s*prandial|pp)?\s*(glucose|sugar)?\b/i,
-      /\bogtt\b/i,
-      /oral\s*glucose\s*tolerance\s*test/i,
-      /post\s*prandial\s*(blood\s*)?(glucose|sugar)/i,
-      /2[\s-]*h[rs]?\s*post\s*glucose/i,
-    ],
+  },
+  {
+    testId: OCR_TEST_IDS.RBG,
+    pattern:
+      /\b(?:rbg|rbs|random\s+(?:blood\s+)?(?:glucose|sugar)|random\s+blood\s+glucose)\b/i,
+    unit: "mg/dL",
   },
 ];
 
-// Matches a numeric value (int or float) optionally followed by unit
-const VALUE_PATTERN = /(\d{1,3}(?:\.\d{1,2})?)\s*(%|mg\s*\/?\s*d[lI1]|mmol\s*\/?\s*l)?/i;
+const UNIT_PATTERN = /(?:mg\s*\/\s*d[l1]|mmol\s*\/\s*l|%)/i;
 
-/**
- * @param {string} rawText - raw text returned by the OCR engine
- * @returns {{
- *   matches: Array<{testId: string, value: number, unit: string, sourceLine: string}>,
- *   unmatchedLines: string[]
- * }}
- */
-export function extractLabCandidates(rawText) {
-  const lines = (rawText || "")
-    .split("\n")
-    .map((l) => l.trim())
-    .filter(Boolean);
+// Matches common reference intervals such as:
+// (70-100), [70 - 100], 70 to 100
+const REFERENCE_RANGE_PATTERN =
+  /(?:\[|\()?\s*\d+(?:\.\d+)?\s*(?:-|–|—|to)\s*\d+(?:\.\d+)?\s*(?:\]|\))?/gi;
 
-  const matches = [];
-  const unmatchedLines = [];
+const NUMBER_PATTERN = /-?\d+(?:\.\d+)?/g;
 
-  for (let i = 0; i < lines.length; i++) {
-    const line = lines[i];
-    let matchedThisLine = false;
+const normalizeSpaces = (text) =>
+  String(text ?? "").replace(/\s+/g, " ").trim();
 
-    for (const test of TEST_NAME_PATTERNS) {
-      // Find the first matching pattern for this test on the line
-      let bestMatch = null;
-      for (const pattern of test.patterns) {
-        const m = line.match(pattern);
-        if (m) {
-          bestMatch = m;
-          break;
-        }
-      }
-
-      if (!bestMatch) continue;
-
-      // Extract text strictly AFTER the matched test name to avoid matching
-      // digits inside the test name itself (e.g. '1' in 'HbA1c', '2' in '2-Hour OGTT')
-      const afterText = line.slice(bestMatch.index + bestMatch[0].length);
-
-      let valueHit = afterText.match(VALUE_PATTERN);
-      let sourceLine = line;
-
-      // If no value found on the same line after test name, check the immediate next line
-      if (!valueHit && i + 1 < lines.length) {
-        const nextLine = lines[i + 1];
-        const nextHit = nextLine.match(VALUE_PATTERN);
-        if (nextHit) {
-          valueHit = nextHit;
-          sourceLine = `${line} | ${nextLine}`;
-        }
-      }
-
-      if (!valueHit) continue;
-
-      const numeric = Number(valueHit[1]);
-      if (!Number.isFinite(numeric) || numeric <= 0) continue;
-
-      matches.push({
-        testId: test.id,
-        value: numeric,
-        unit: test.unit,
-        sourceLine: sourceLine,
-      });
-      matchedThisLine = true;
-      break; // one test match per line is enough
-    }
-
-    if (!matchedThisLine) unmatchedLines.push(line);
+export function normalizeUnit(rawUnit) {
+  if (!rawUnit) {
+    return null;
   }
 
-  return { matches, unmatchedLines };
+  const unit = String(rawUnit)
+    .toLowerCase()
+    .replace(/\s+/g, "")
+    .replace(/1/g, "l");
+
+  if (unit === "%" || unit === "percent") {
+    return "%";
+  }
+
+  if (unit === "mg/dl") {
+    return "mg/dL";
+  }
+
+  if (unit === "mmol/l") {
+    return "mmol/L";
+  }
+
+  return null;
+}
+
+function extractUnit(text) {
+  const match = String(text ?? "").match(UNIT_PATTERN);
+
+  return match ? normalizeUnit(match[0]) : null;
+}
+
+function removeReferenceRanges(text) {
+  return String(text ?? "").replace(REFERENCE_RANGE_PATTERN, " ");
+}
+
+function getNumbers(text) {
+  return (String(text ?? "").match(NUMBER_PATTERN) || [])
+    .map(Number)
+    .filter(Number.isFinite);
+}
+
+function extractMeasurement(text) {
+  const cleanedText = removeReferenceRanges(text);
+  const unit = extractUnit(cleanedText);
+  const numbers = getNumbers(cleanedText);
+
+  if (numbers.length === 0) {
+    return null;
+  }
+
+  // Use the last numeric value after removing reference intervals.
+  // This avoids selecting the lower or upper reference limit.
+  const value = numbers[numbers.length - 1];
+
+  return {
+    value,
+    unit,
+  };
+}
+
+export function validateValue(testId, value, unit) {
+  const numericValue = Number(value);
+
+  if (
+    value === null ||
+    value === undefined ||
+    value === "" ||
+    !Number.isFinite(numericValue) ||
+    numericValue <= 0
+  ) {
+    return {
+      valid: false,
+      reason: "invalid_value",
+    };
+  }
+
+  if (testId === OCR_TEST_IDS.HBA1C) {
+    if (unit !== "%" || numericValue < 3 || numericValue > 15) {
+      return {
+        valid: false,
+        reason: "implausible_hba1c_value",
+      };
+    }
+
+    return {
+      valid: true,
+      reason: null,
+    };
+  }
+
+  const glucoseTestIds = [
+    OCR_TEST_IDS.FPG,
+    OCR_TEST_IDS.RBG,
+    OCR_TEST_IDS.OGTT,
+    OCR_TEST_IDS.PPBS,
+  ];
+
+  if (!glucoseTestIds.includes(testId)) {
+    return {
+      valid: false,
+      reason: "unsupported_test",
+    };
+  }
+
+  if (!["mg/dL", "mmol/L"].includes(unit)) {
+    return {
+      valid: false,
+      reason: "missing_or_unsupported_unit",
+    };
+  }
+
+  const valueInMgDl =
+    unit === "mmol/L"
+      ? numericValue * GLUCOSE_CONVERSION_FACTOR
+      : numericValue;
+
+  if (valueInMgDl < 20 || valueInMgDl > 800) {
+    return {
+      valid: false,
+      reason: "implausible_glucose_value",
+    };
+  }
+
+  return {
+    valid: true,
+    reason: null,
+  };
+}
+
+function createCandidate(testId, measurement, sourceText) {
+  const originalValue = measurement.value;
+  const originalUnit = measurement.unit;
+
+  let value = originalValue;
+  let unit = originalUnit;
+  let convertedFrom = null;
+
+  // Convert mmol/L to mg/dL only once.
+  // Preserve the original OCR value and unit for display and verification.
+  if (
+    testId !== OCR_TEST_IDS.HBA1C &&
+    originalUnit === "mmol/L"
+  ) {
+    value = Number(
+      (originalValue * GLUCOSE_CONVERSION_FACTOR).toFixed(1)
+    );
+
+    unit = "mg/dL";
+    convertedFrom = "mmol/L";
+  }
+
+  const validation = validateValue(testId, originalValue, originalUnit);
+
+  const needsManualReview =
+    !originalUnit || !validation.valid;
+
+  return {
+    testId,
+    value,
+    unit,
+    originalValue,
+    originalUnit,
+    convertedFrom,
+    needsManualReview,
+    validationReason: validation.reason,
+    sourceText: normalizeSpaces(sourceText),
+  };
+}
+
+function findTest(line) {
+  return TEST_PATTERNS.find(({ pattern }) => pattern.test(line)) || null;
+}
+
+function getMeasurementAfterLabel(line, pattern) {
+  const match = pattern.exec(line);
+
+  if (!match) {
+    return null;
+  }
+
+  const textAfterLabel = line.slice(match.index + match[0].length);
+
+  return extractMeasurement(textAfterLabel);
+}
+
+function isStandaloneResultLine(line) {
+  const cleaned = normalizeSpaces(removeReferenceRanges(line));
+
+  if (!cleaned) {
+    return false;
+  }
+
+  // Avoid taking values from another named test or unrelated report field.
+  if (findTest(cleaned)) {
+    return false;
+  }
+
+  if (
+    /\b(?:age|date|patient|doctor|sample|report|reference|normal|range)\b/i.test(
+      cleaned
+    )
+  ) {
+    return false;
+  }
+
+  return getNumbers(cleaned).length > 0;
+}
+
+export function extractLabCandidates(ocrText) {
+  if (typeof ocrText !== "string" || !ocrText.trim()) {
+    return [];
+  }
+
+  const lines = ocrText
+    .split(/\r?\n/)
+    .map(normalizeSpaces)
+    .filter(Boolean);
+
+  const candidates = [];
+
+  for (let index = 0; index < lines.length; index += 1) {
+    const line = lines[index];
+    const test = findTest(line);
+
+    if (!test) {
+      continue;
+    }
+
+    let measurement = getMeasurementAfterLabel(line, test.pattern);
+    let sourceText = line;
+
+    // Support reports where the test name and result are on separate lines.
+    // Only accept a simple standalone result line.
+    if (
+      !measurement &&
+      index + 1 < lines.length &&
+      isStandaloneResultLine(lines[index + 1])
+    ) {
+      measurement = extractMeasurement(lines[index + 1]);
+      sourceText = `${line} ${lines[index + 1]}`;
+      index += 1;
+    }
+
+    if (!measurement) {
+      continue;
+    }
+
+    const candidate = createCandidate(
+      test.testId,
+      measurement,
+      sourceText
+    );
+
+    candidates.push(candidate);
+  }
+
+  return candidates;
 }

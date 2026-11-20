@@ -46,7 +46,7 @@ const strings = {
     howStep3Title: "Prepare",
     howStep3Desc: "Know exactly what questions to discuss with a qualified healthcare professional.",
 
-    /* ── Main Product Value (Dark Banner) ── */
+    /* ── Main Product Value ── */
     valueHeading: "Care Continuity",
     valueTitle: "A screening result shouldn't be the end of the journey.",
     valuePoint1: "Clear, non-alarmist screening indication",
@@ -151,6 +151,7 @@ const strings = {
     factorsDisclaimer: "These reflect model contribution signals. They are not medical diagnoses.",
     directionIncreased: "Contributed toward elevated risk",
     directionDecreased: "Contributed toward lower risk",
+
     factorNames: {
       HighBP: "High Blood Pressure",
       HighChol: "High Cholesterol",
@@ -161,6 +162,7 @@ const strings = {
       PhysActivity: "Physical Activity",
       GenHlth: "General Health Rating",
     },
+
     whatToDoTitle: "What to do next",
     whatToDoDesc: "Your screening result is not a diagnosis. Consider discussing appropriate confirmatory testing with a healthcare professional.",
     continueToNextStep: "Continue to Next Step (Care Passport) →",
@@ -173,7 +175,7 @@ const strings = {
     guidanceCardTitle: "A screening result is not a diagnosis.",
     guidanceCardBody:
       "Discuss appropriate confirmatory testing (such as fasting blood glucose or HbA1c) with a qualified healthcare professional. Do not make changes to your medication or lifestyle treatments without clinical guidance.",
-    
+
     passportHeading: "Your Confirmation Passport",
     passportSub: "A clean, structured summary you can take to your healthcare appointment.",
     passportSummaryTitle: "Screening Summary",
@@ -211,7 +213,6 @@ const strings = {
     exitTitle: "Screening Not Applicable",
     blockTitle: "Unable to Process",
     tryAgain: "Try Again",
-
     /* ── Lab Report Checker Page ── */
     labPageBadge: "Manual Lab Report Checker",
     labPageTitle: "Check Your Lab Report",
@@ -231,7 +232,7 @@ const strings = {
     labResultSubmittedTestLabel: "Test",
     labResultSubmittedValueLabel: "Value",
 
-    /* Reference-range interpretation (HbA1c / FPG / OGTT) */
+    /* Reference-range interpretation */
     labCategoryNormalLabel: "Within the Reference Range",
     labCategoryNormalDesc:
       "This value falls within the typical reference range for this test.",
@@ -242,7 +243,7 @@ const strings = {
     labCategoryDiabetesDesc:
       "This value falls within the range associated with diabetes for this test. This is not a diagnosis.",
 
-    /* Random Blood Glucose — handled separately since it isn't diagnostic on its own */
+    /* Random Blood Glucose */
     labRbgBelowLabel: "Below the Diagnostic Threshold",
     labRbgBelowDesc:
       "A random glucose value below 200 mg/dL does not, by itself, establish or rule out diabetes. Random glucose alone is generally not used to diagnose diabetes unless it is accompanied by classic symptoms.",
@@ -250,7 +251,7 @@ const strings = {
     labRbgAboveDesc:
       "A random glucose value of 200 mg/dL or higher can be used diagnostically when accompanied by classic symptoms of high blood sugar, such as excessive thirst, frequent urination, or unexplained weight loss. This result warrants prompt evaluation by a healthcare professional.",
 
-    /* Standing safety footnotes shown with any interpreted result */
+    /* Standing safety footnotes */
     labConfirmationNote:
       "An abnormal result on a single test generally needs to be confirmed by a healthcare professional through repeat testing or additional tests, unless clear symptoms of diabetes are already present.",
     labPregnancyNote:
@@ -264,7 +265,7 @@ const strings = {
     labValueRequired: "Please enter a value.",
     labValueInvalid: "Please enter a valid positive number.",
 
-    /* OCR Lab Report Upload (extraction only - labRanges.js still does all interpretation) */
+    /* OCR Lab Report Upload */
     ocrBadge: "Optional",
     ocrUploadTitle: "Scan a lab report",
     ocrUploadSub:
@@ -291,7 +292,7 @@ const strings = {
     passportLabExplanationLabel: "Brief Explanation",
     passportLabDateLabel: "Date Checked",
 
-    /* Follow-up Done (Step 4) - tracking only, not medical clearance */
+    /* Follow-up Done */
     followUpDoneBtn: "Mark Follow-up Step as Done",
     followUpConfirmedMsg: "Follow-up step marked as done.",
     followUpCompletedOn: "Marked done on",
@@ -304,8 +305,41 @@ const strings = {
     passportFollowUpDateLabel: "Marked Done On",
     passportFollowUpDisclaimer:
       "This reflects a self-reported tracking status only. It does not confirm that treatment, follow-up care, or medical clearance has taken place.",
-  },
 
+    /* ── Updated Lab Report Review ── */
+    labTestPPBS: "Post-Meal Blood Glucose (PPBS)",
+    labManualReviewLabel: "Manual review required",
+    labManualReviewDesc: "This result needs review by a qualified healthcare professional. It is not interpreted using the OGTT thresholds.",
+    labPpbsManualReviewDesc: "A post-meal blood glucose result is not the same as a standardized 2-hour OGTT. Please discuss it with a healthcare professional.",
+    labDateRequired: "Please enter the date shown on the lab report.",
+    labDateUnavailable: "The report date is unavailable. Please verify it manually.",
+    labUnitRequired: "Please select the unit shown on your report.",
+    labUnitUnknown: "Unit not detected — please verify the report and select the correct unit.",
+    labReportDateLabel: "Lab Report Date",
+    ocrManualVerificationPrompt: "OCR extracted this information. Verify it against the original report before continuing.",
+    ocrOriginalValueLabel: "Original report value",
+    ocrConvertedValueLabel: "Converted value",
+    ocrConfirmValueCheckbox: "I have checked this value and unit against the original report.",
+    ocrMustVerify: "Please verify the extracted value and unit before checking the result.",
+    ocrNotVerifiedWarning: "This OCR value has not been verified. Please compare it with the original report.",
+
+    /* ── Confirmation Pattern Review ── */
+    confirmationPatternTitle: "Lab Result Pattern Review",
+    confirmationPatternStatus: "Review status",
+    confirmationPatternDisclaimer: "This is a rule-based decision-support summary, not a diagnosis. A qualified healthcare professional must interpret the results in clinical context.",
+    confirmation_insufficient_data: "Not enough information",
+    confirmation_hba1c_unreliable: "HbA1c reliability needs review",
+    confirmation_no_abnormal_pattern: "No repeated abnormal pattern detected",
+    confirmation_one_abnormal_result: "One abnormal result recorded",
+    confirmation_discordant: "Results do not agree",
+    confirmation_confirmed_pattern: "Repeated abnormal pattern detected",
+    confirmationMessage_insufficient_data: "Add verified eligible lab results from different dates or test types for a pattern review.",
+    confirmationMessage_hba1c_unreliable: "HbA1c has been marked as potentially unreliable and was not used in this review. Discuss suitable testing with a healthcare professional.",
+    confirmationMessage_no_abnormal_pattern: "The currently recorded verified results do not show the required abnormal pattern. This does not rule out diabetes.",
+    confirmationMessage_one_abnormal_result: "One abnormal result is recorded. A single result generally needs clinical review and may require repeat or additional testing.",
+    confirmationMessage_discordant: "The recorded results are mixed or do not agree. A healthcare professional should review them and decide whether repeat testing is appropriate.",
+    confirmationMessage_confirmed_pattern: "More than one eligible verified result meets the rule-based abnormal pattern. This is not a diagnosis; clinical confirmation is required."
+  },
   hi: {
     /* ── Navbar ── */
     appName: "SugarGuard CareBridge",
@@ -353,7 +387,7 @@ const strings = {
     howStep3Title: "तैयार हों",
     howStep3Desc: "जानें कि स्वास्थ्य पेशेवर के साथ क्या महत्वपूर्ण प्रश्न चर्चा करने हैं।",
 
-    /* ── Main Product Value (Dark Banner) ── */
+    /* ── Main Product Value ── */
     valueHeading: "देखभाल की निरंतरता",
     valueTitle: "स्क्रीनिंग परिणाम यात्रा का अंत नहीं होना चाहिए।",
     valuePoint1: "स्पष्ट और गैर-चिंताजनक स्क्रीनिंग संकेत",
@@ -458,6 +492,7 @@ const strings = {
     factorsDisclaimer: "ये मॉडल के योगदान संकेत हैं। ये चिकित्सा निदान नहीं हैं।",
     directionIncreased: "बढ़े हुए जोखिम की ओर योगदान",
     directionDecreased: "कम जोखिम की ओर योगदान",
+
     factorNames: {
       HighBP: "उच्च रक्तचाप",
       HighChol: "उच्च कोलेस्ट्रॉल",
@@ -468,11 +503,11 @@ const strings = {
       PhysActivity: "शारीरिक गतिविधि",
       GenHlth: "सामान्य स्वास्थ्य रेटिंग",
     },
+
     whatToDoTitle: "आगे क्या करना है",
     whatToDoDesc: "आपका स्क्रीनिंग परिणाम कोई निदान नहीं है। एक योग्य स्वास्थ्य पेशेवर के साथ उचित पुष्टि परीक्षण पर चर्चा करने पर विचार करें।",
     continueToNextStep: "अगले कदम (केयर पासपोर्ट) पर आगे बढ़ें →",
     startNewScreening: "नई स्क्रीनिंग शुरू करें",
-
     /* ── Care Journey / Passport Page ── */
     journeyPageTitle: "आपका अगला कदम",
     journeyPageSub: "स्क्रीनिंग परिणाम से उचित पुष्टि और देखभाल की ओर बढ़ें।",
@@ -480,7 +515,7 @@ const strings = {
     guidanceCardTitle: "स्क्रीनिंग परिणाम कोई निदान नहीं है।",
     guidanceCardBody:
       "योग्य स्वास्थ्य पेशेवर के साथ उपयुक्त पुष्टि परीक्षण (जैसे फास्टिंग ब्लड ग्लूकोज़ या HbA1c) के बारे में चर्चा करें। डॉक्टरी सलाह के बिना अपनी दवाओं या उपचार में कोई बदलाव न करें।",
-    
+
     passportHeading: "आपका कन्फर्मेशन पासपोर्ट",
     passportSub: "एक साफ, संरचित सारांश जिसे आप अपने डॉक्टर के पास ले जा सकते हैं।",
     passportSummaryTitle: "स्क्रीनिंग सारांश",
@@ -538,7 +573,7 @@ const strings = {
     labResultSubmittedTestLabel: "जांच",
     labResultSubmittedValueLabel: "मान",
 
-    /* संदर्भ-सीमा व्याख्या (HbA1c / FPG / OGTT) */
+    /* संदर्भ-सीमा व्याख्या */
     labCategoryNormalLabel: "सामान्य संदर्भ सीमा के भीतर",
     labCategoryNormalDesc:
       "यह मान इस जांच के सामान्य संदर्भ सीमा के भीतर है।",
@@ -549,7 +584,7 @@ const strings = {
     labCategoryDiabetesDesc:
       "यह मान इस जांच के लिए डायबिटीज़ से जुड़ी सीमा में आता है। यह कोई निदान नहीं है।",
 
-    /* रैंडम ब्लड ग्लूकोज़ — अलग से संभाला गया क्योंकि यह अकेले निदान योग्य नहीं है */
+    /* Random Blood Glucose */
     labRbgBelowLabel: "नैदानिक सीमा से नीचे",
     labRbgBelowDesc:
       "200 mg/dL से कम रैंडम ग्लूकोज़ मान अकेले डायबिटीज़ को स्थापित या खारिज नहीं करता। रैंडम ग्लूकोज़ आमतौर पर तब तक निदान के लिए उपयोग नहीं किया जाता जब तक इसके साथ स्पष्ट लक्षण न हों।",
@@ -557,7 +592,7 @@ const strings = {
     labRbgAboveDesc:
       "200 mg/dL या उससे अधिक का रैंडम ग्लूकोज़ मान, उच्च रक्त शर्करा के स्पष्ट लक्षणों (जैसे अत्यधिक प्यास, बार-बार पेशाब आना, या अस्पष्टीकृत वजन घटना) के साथ होने पर निदान के लिए उपयोग किया जा सकता है। इस परिणाम के लिए किसी स्वास्थ्य पेशेवर द्वारा शीघ्र मूल्यांकन आवश्यक है।",
 
-    /* किसी भी व्याख्यायित परिणाम के साथ दिखाई जाने वाली स्थायी सुरक्षा टिप्पणियाँ */
+    /* Standing safety footnotes */
     labConfirmationNote:
       "किसी एक जांच में असामान्य परिणाम को आमतौर पर किसी स्वास्थ्य पेशेवर द्वारा दोहराई गई जांच या अतिरिक्त जांचों से पुष्टि करने की आवश्यकता होती है, जब तक कि डायबिटीज़ के स्पष्ट लक्षण पहले से मौजूद न हों।",
     labPregnancyNote:
@@ -598,7 +633,7 @@ const strings = {
     passportLabExplanationLabel: "संक्षिप्त विवरण",
     passportLabDateLabel: "जांच की तिथि",
 
-    /* Follow-up Done (Step 4) */
+    /* Follow-up Done */
     followUpDoneBtn: "फॉलो-अप चरण को पूर्ण चिह्नित करें",
     followUpConfirmedMsg: "फॉलो-अप चरण पूर्ण के रूप में चिह्नित किया गया।",
     followUpCompletedOn: "इस तिथि को पूर्ण चिह्नित किया गया",
@@ -611,6 +646,40 @@ const strings = {
     passportFollowUpDateLabel: "पूर्ण चिह्नित करने की तिथि",
     passportFollowUpDisclaimer:
       "यह केवल एक स्व-रिपोर्ट की गई ट्रैकिंग स्थिति दर्शाता है। यह इलाज, फॉलो-अप देखभाल, या चिकित्सीय स्वीकृति की पुष्टि नहीं करता।",
+
+    /* ── अपडेटेड लैब रिपोर्ट समीक्षा ── */
+    labTestPPBS: "भोजन के बाद ब्लड ग्लूकोज़ (PPBS)",
+    labManualReviewLabel: "मैन्युअल समीक्षा आवश्यक",
+    labManualReviewDesc: "इस परिणाम की योग्य स्वास्थ्य पेशेवर द्वारा समीक्षा आवश्यक है। इसकी व्याख्या OGTT की सीमाओं के आधार पर नहीं की जाती।",
+    labPpbsManualReviewDesc: "भोजन के बाद की ब्लड ग्लूकोज़ जांच मानकीकृत 2-घंटे OGTT के समान नहीं होती। कृपया स्वास्थ्य पेशेवर से चर्चा करें।",
+    labDateRequired: "कृपया लैब रिपोर्ट पर दी गई तारीख दर्ज करें।",
+    labDateUnavailable: "रिपोर्ट की तारीख उपलब्ध नहीं है। कृपया इसे मैन्युअल रूप से सत्यापित करें।",
+    labUnitRequired: "कृपया अपनी रिपोर्ट में दी गई इकाई चुनें।",
+    labUnitUnknown: "इकाई का पता नहीं चला — कृपया रिपोर्ट देखकर सही इकाई चुनें।",
+    labReportDateLabel: "लैब रिपोर्ट की तारीख",
+    ocrManualVerificationPrompt: "OCR ने यह जानकारी निकाली है। आगे बढ़ने से पहले इसे मूल रिपोर्ट से मिलाकर सत्यापित करें।",
+    ocrOriginalValueLabel: "रिपोर्ट में दिया गया मूल मान",
+    ocrConvertedValueLabel: "परिवर्तित मान",
+    ocrConfirmValueCheckbox: "मैंने इस मान और इकाई को मूल रिपोर्ट से मिलाकर जांच लिया है।",
+    ocrMustVerify: "परिणाम जांचने से पहले निकाले गए मान और इकाई को सत्यापित करें।",
+    ocrNotVerifiedWarning: "इस OCR मान का सत्यापन नहीं हुआ है। कृपया इसे मूल रिपोर्ट से मिलाएं।",
+
+    /* ── परिणामों के पैटर्न की समीक्षा ── */
+    confirmationPatternTitle: "लैब परिणाम पैटर्न की समीक्षा",
+    confirmationPatternStatus: "समीक्षा स्थिति",
+    confirmationPatternDisclaimer: "यह नियम-आधारित निर्णय-सहायता सारांश है, निदान नहीं। योग्य स्वास्थ्य पेशेवर को नैदानिक संदर्भ में परिणामों की व्याख्या करनी चाहिए।",
+    confirmation_insufficient_data: "पर्याप्त जानकारी नहीं है",
+    confirmation_hba1c_unreliable: "HbA1c की विश्वसनीयता की समीक्षा आवश्यक",
+    confirmation_no_abnormal_pattern: "बार-बार असामान्य पैटर्न नहीं मिला",
+    confirmation_one_abnormal_result: "एक असामान्य परिणाम दर्ज है",
+    confirmation_discordant: "परिणाम आपस में मेल नहीं खाते",
+    confirmation_confirmed_pattern: "बार-बार असामान्य पैटर्न मिला",
+    confirmationMessage_insufficient_data: "पैटर्न की समीक्षा के लिए अलग-अलग तारीखों या जांच प्रकारों के सत्यापित योग्य लैब परिणाम जोड़ें।",
+    confirmationMessage_hba1c_unreliable: "HbA1c को संभावित रूप से अविश्वसनीय चिह्नित किया गया है और इस समीक्षा में उपयोग नहीं किया गया। उपयुक्त जांच के बारे में स्वास्थ्य पेशेवर से चर्चा करें।",
+    confirmationMessage_no_abnormal_pattern: "अभी दर्ज सत्यापित परिणामों में आवश्यक असामान्य पैटर्न नहीं मिला। इसका अर्थ यह नहीं है कि डायबिटीज़ नहीं है।",
+    confirmationMessage_one_abnormal_result: "एक असामान्य परिणाम दर्ज है। एक परिणाम की चिकित्सीय समीक्षा आवश्यक होती है और दोबारा या अतिरिक्त जांच की जरूरत हो सकती है।",
+    confirmationMessage_discordant: "दर्ज परिणाम मिश्रित हैं या आपस में मेल नहीं खाते। स्वास्थ्य पेशेवर को उनकी समीक्षा करके तय करना चाहिए कि दोबारा जांच आवश्यक है या नहीं।",
+    confirmationMessage_confirmed_pattern: "एक से अधिक योग्य सत्यापित परिणाम नियम-आधारित असामान्य पैटर्न से मेल खाते हैं। यह निदान नहीं है; चिकित्सीय पुष्टि आवश्यक है।"
   },
 };
 
