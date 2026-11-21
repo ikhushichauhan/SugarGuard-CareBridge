@@ -1,14 +1,6 @@
-import AnatomicalOrganModel from "./AnatomicalOrganModel";
 import yoImg from "../assets/yo.png";
 import newImg from "../assets/new.png";
 import "./DiabetesImpactPage.css";
-
-// Resolve asset URLs for 3D organ models
-const heartUrl = new URL("../assets/realistic_human_heart.glb", import.meta.url).href;
-const brainUrl = new URL("../assets/brain.glb", import.meta.url).href;
-const eyeUrl = new URL("../assets/realistic_human_eye.glb", import.meta.url).href;
-const kidneyUrl = new URL("../assets/kidney.glb", import.meta.url).href;
-const toothUrl = new URL("../assets/inside_my_tooth.glb", import.meta.url).href;
 
 export default function DiabetesImpactPage({ onStartScreening }) {
   // 5 Organ cards (Nerves & Feet removed per request)
@@ -17,8 +9,6 @@ export default function DiabetesImpactPage({ onStartScreening }) {
       num: "01",
       title: "Heart & Blood Vessels",
       desc: "Diabetes can damage blood vessels over time and increase the risk of cardiovascular disease and stroke.",
-      url: heartUrl,
-      targetSize: 3.4,
       icon: (
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
           <path d="M19.5 12.572l-7.5 7.428l-7.5 -7.428a5 5 0 1 1 7.5 -6.566a5 5 0 1 1 7.5 6.572" />
@@ -30,8 +20,6 @@ export default function DiabetesImpactPage({ onStartScreening }) {
       num: "02",
       title: "Brain",
       desc: "Diabetes-related blood-vessel damage can increase the risk of stroke and other neurological complications.",
-      url: brainUrl,
-      targetSize: 3.2,
       icon: (
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
           <path d="M9.5 4a3.5 3.5 0 0 0 -3.5 3.5v1a3.5 3.5 0 0 0 -2 3.2v.3a3.5 3.5 0 0 0 2.5 3.35v1.65a3.5 3.5 0 0 0 3.5 3.5h.5" />
@@ -44,8 +32,6 @@ export default function DiabetesImpactPage({ onStartScreening }) {
       num: "03",
       title: "Eyes",
       desc: "Persistently high blood glucose can damage the small blood vessels in the retina, potentially causing diabetic retinopathy and vision problems.",
-      url: eyeUrl,
-      targetSize: 3.2,
       icon: (
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
           <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
@@ -57,8 +43,6 @@ export default function DiabetesImpactPage({ onStartScreening }) {
       num: "04",
       title: "Kidneys",
       desc: "High blood glucose can damage the kidney's filtering blood vessels over time, leading to diabetic kidney disease.",
-      url: kidneyUrl,
-      targetSize: 3.2,
       icon: (
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
           <path d="M12 3a9 9 0 0 0 9 9a9 9 0 0 1 -9 9a9 9 0 0 1 -9 -9a9 9 0 0 0 9 -9z" />
@@ -69,8 +53,6 @@ export default function DiabetesImpactPage({ onStartScreening }) {
       num: "05",
       title: "Mouth & Gums",
       desc: "People with diabetes can have a higher risk of gum disease and other oral health problems.",
-      url: toothUrl,
-      targetSize: 3.2,
       icon: (
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
           <path d="M12 4c-2.5 0 -4.5 1.5 -4.5 3.5c0 1.5 1 2.5 1 4c0 3 -2 6 -2 8.5c0 1 1 2 2.5 2c1.5 0 2 -1 3 -1s1.5 1 3 1c1.5 0 2.5 -1 2.5 -2c0 -2.5 -2 -5.5 -2 -8.5c0 -1.5 1 -2.5 1 -4c0 -2 -2 -3.5 -4.5 -3.5z" />
@@ -119,19 +101,10 @@ export default function DiabetesImpactPage({ onStartScreening }) {
                   <span className="sg-card-num">{card.num}</span>
                 </div>
 
-                <div className="sg-card-body-split">
+                <div className="sg-card-body">
                   <div className="sg-card-info-side">
                     <div className="sg-card-icon-wrapper">{card.icon}</div>
                     <p className="sg-card-desc-text">{card.desc}</p>
-                  </div>
-
-                  <div className="sg-card-3d-side">
-                    <div className="sg-card-canvas-holder">
-                      <AnatomicalOrganModel
-                        modelUrl={card.url}
-                        targetSize={card.targetSize}
-                      />
-                    </div>
                   </div>
                 </div>
               </div>
